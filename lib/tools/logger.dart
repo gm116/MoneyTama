@@ -3,7 +3,7 @@ import 'dart:developer' as dev;
 import 'package:flutter/foundation.dart';
 import 'package:logging/logging.dart';
 
-final logger = Logger('');
+final logger = Logger('MoneyTamaLogger');
 
 void initLogger() {
   if (kDebugMode) {
