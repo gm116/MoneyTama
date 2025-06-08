@@ -7,11 +7,8 @@ class DecorationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Украшение питомца')),
-      body: Center(
-        child: const Text('Цвета + демо-шляпки'),
-      ),
+    return Center(
+      child: const Text('Цвета + демо-шляпки'),
     );
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../views/analytical_pie_chart.dart';
+
 class HistoryScreen extends StatelessWidget {
   final Function(int) updateIndex;
 
@@ -7,10 +9,14 @@ class HistoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('История расходов')),
-      body: Center(
-        child: const Text('Полная история расходов + диаграммы'),
+    return Center(
+      child: AnalyticalPieChart(
+        data: [
+          PieChartSegment(percentage: 50.0, color: Colors.red),
+          PieChartSegment(percentage: 30.0, color: Colors.blue),
+          PieChartSegment(percentage: 15.0, color: Colors.green),
+          PieChartSegment(percentage: 5.0, color: Colors.yellow),
+        ],
       ),
     );
   }

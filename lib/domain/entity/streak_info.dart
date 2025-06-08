@@ -6,4 +6,9 @@ class StreakInfo {
     required this.startDate,
     required this.attendance,
   });
+
+  @override
+  String toString() {
+    return 'StreakInfo(startDate: $startDate, attendance: $attendance)';
+  }
 }
