@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:moneytama/presentation/di/di.dart';
+import 'package:moneytama/presentation/screens/add_operation_screen.dart';
+
+import '../navigation/navigation_service.dart';
 
 class HomeScreen extends StatelessWidget {
   final Function(int) updateIndex;
@@ -19,6 +23,12 @@ class HomeScreen extends StatelessWidget {
                 // Navigate to history
               },
               child: const Text('Перейти на историю'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                getIt<NavigationService>().navigateTo(AddOperationScreen.routeName);
+              },
+              child: const Text('Добавить расход'),
             ),
           ]
       ),

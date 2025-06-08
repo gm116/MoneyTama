@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:moneytama/presentation/screens/add_expense_screen.dart';
 import 'package:moneytama/presentation/screens/settings_screen.dart';
 
 import 'decoration_screen.dart';
@@ -28,7 +27,6 @@ class _MainScaffoldState extends State<MainScaffold> {
       HistoryScreen(updateIndex: _updateIndex),
       DecorationScreen(updateIndex: _updateIndex),
       SettingsScreen(updateIndex: _updateIndex),
-      AddExpenseScreen(updateIndex: _updateIndex),
     ];
   }
 

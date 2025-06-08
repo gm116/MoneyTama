@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:moneytama/presentation/screens/add_expense_screen.dart';
+import 'package:moneytama/presentation/screens/add_operation_screen.dart';
 import 'package:moneytama/presentation/screens/main_scaffold.dart';
 import 'package:moneytama/presentation/screens/streak_screen.dart';
 
@@ -21,9 +21,9 @@ class MyApp extends StatelessWidget {
           case MainScaffold.routeName:
             return MaterialPageRoute(
                 builder: (context) => const MainScaffold());
-          case AddExpenseScreen.routeName:
+          case AddOperationScreen.routeName:
             return MaterialPageRoute(
-                builder: (context) => const AddExpenseScreen());
+                builder: (context) => const AddOperationScreen());
           default:
             return MaterialPageRoute(
                 builder: (context) => const StreakScreen());
@@ -36,8 +36,8 @@ class MyApp extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         MainScaffold.routeName:
             (BuildContext context) => const MainScaffold(),
-        AddExpenseScreen.routeName:
-            (BuildContext context) => const AddExpenseScreen(),
+        AddOperationScreen.routeName:
+            (BuildContext context) => const AddOperationScreen(),
       },
     );
   }
