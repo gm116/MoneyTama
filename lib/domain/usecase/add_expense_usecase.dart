@@ -6,20 +6,7 @@ class AddExpenseUseCase {
 
   AddExpenseUseCase(this.repository);
 
-  Future<void> execute({
-    required double sum,
-    required DateTime timestamp,
-    required String description,
-    required String category,
-    required bool planned,
-  }) {
-    final expense = Expense(
-      planned: planned,
-      category: category,
-      sum: sum,
-      timestamp: timestamp,
-      description: description,
-    );
+  Future<void> execute(Expense expense) {
     return repository.addOperation(expense);
   }
 }

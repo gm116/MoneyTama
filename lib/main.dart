@@ -6,5 +6,6 @@ import 'package:moneytama/tools/logger.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   initLogger();
+  setupDependencies();
   runApp(const MyApp());
 }

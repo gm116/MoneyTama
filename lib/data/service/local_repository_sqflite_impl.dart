@@ -1,9 +1,9 @@
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
-import '../../domain/entity/operation.dart';
 import '../../domain/entity/budget.dart';
 import '../../domain/entity/category.dart';
+import '../../domain/entity/operation.dart';
 import '../../domain/repository/local_repository.dart';
 
 class LocalRepositorySqfliteImpl implements LocalRepository {
@@ -238,11 +238,13 @@ class LocalRepositorySqfliteImpl implements LocalRepository {
   }
 
   // ---------------------- Category ----------------------
+  @override
   Future<void> addCategory(Category category) async {
     final db = await database;
     await db.insert('categories', category.toMap());
   }
 
+  @override
   Future<List<Category>> getCategories({String? type}) async {
     final db = await database;
     final maps =
@@ -256,6 +258,7 @@ class LocalRepositorySqfliteImpl implements LocalRepository {
     return maps.map((map) => Category.fromMap(map)).toList();
   }
 
+  @override
   Future<void> removeCategory(int id) async {
     final db = await database;
     await db.delete('categories', where: 'id = ?', whereArgs: [id]);

@@ -1,4 +1,3 @@
-import '../entity/category.dart';
 import '../repository/local_repository.dart';
 
 class GetExpenseCategoriesUseCase {
@@ -6,5 +5,8 @@ class GetExpenseCategoriesUseCase {
 
   GetExpenseCategoriesUseCase(this.repository);
 
-  Future<List<Category>> execute() => repository.getCategories(type: 'expense');
+  Future<List<String>> execute() =>
+      repository.getCategories(type: 'expense')
+          .then((categories) =>
+          categories.map((category) => category.name).toList());
 }
