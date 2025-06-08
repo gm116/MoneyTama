@@ -7,9 +7,11 @@ import 'package:moneytama/tools/logger.dart';
 
 import '../../../domain/entity/operation.dart';
 import '../di/di.dart';
+import '../navigation/navigation_service.dart';
 import '../views/chart_segment.dart';
 import '../views/history_top_block.dart';
 import '../views/pie_chart_block.dart';
+import 'add_operation_screen.dart';
 
 class HistoryScreen extends StatefulWidget {
   static const String routeName = '/history';
@@ -68,20 +70,55 @@ class HistoryScreenState extends State<HistoryScreen> {
 
               return Column(
                 children: [
-                  DropdownButton<String>(
-                    value: _selectedPeriod,
-                    items: const [
-                      DropdownMenuItem(value: 'week', child: Text('Неделя')),
-                      DropdownMenuItem(value: 'month', child: Text('Месяц')),
-                      DropdownMenuItem(value: 'year', child: Text('Год')),
-                    ],
-                    onChanged: (value) {
-                      setState(() {
-                        _selectedPeriod = value!;
-                        _filteredOperations =
-                            _filterOperationsByPeriod(operations);
-                      });
-                    },
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        DropdownButton<String>(
+                          value: _selectedPeriod,
+                          items: const [
+                            DropdownMenuItem(value: 'week', child: Text(
+                                'Неделя')),
+                            DropdownMenuItem(value: 'month', child: Text(
+                                'Месяц')),
+                            DropdownMenuItem(value: 'year', child: Text('Год')),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedPeriod = value!;
+                              _filteredOperations =
+                                  _filterOperationsByPeriod(operations);
+                            });
+                          },
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            getIt<NavigationService>().navigateTo(
+                                AddOperationScreen.routeName);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 14),
+                            textStyle: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          child: SizedBox(
+                            height: 16,
+                          child:
+                          Row(
+                              children: [
+                                Icon(Icons.add, size: 15),
+                                Text('Новая операция',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ]
+                          ),
+                        ),
+                        ),
+                      ]
                   ),
                   if (!_showIncomeDetails && !_showExpenseDetails)
                     Row(
@@ -170,7 +207,8 @@ class HistoryScreenState extends State<HistoryScreen> {
                             operation: operation,
                             showDeleteButton: true,
                             onDelete: () {
-                              context.read<HistoryCubit>().removeOperation(operation);
+                              context.read<HistoryCubit>().removeOperation(
+                                  operation);
                             }
                         );
                       },
