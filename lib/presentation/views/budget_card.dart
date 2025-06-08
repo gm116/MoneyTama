@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/entity/budget.dart';
 
 class BudgetCard extends StatelessWidget {
@@ -20,11 +21,26 @@ class BudgetCard extends StatelessWidget {
     return Colors.black;
   }
 
-  String getBudgetStatusText(double percentLeft) {
-    if (percentLeft > 0.8) return 'Бюджет в норме';
-    if (percentLeft > 0.3) return 'Бюджет тратится быстро';
-    if (percentLeft > 0) return 'Бюджет почти на исходе';
-    return 'Бюджет превышен';
+  String getBudgetStatusText(BuildContext context, double percentLeft) {
+    final l10n = AppLocalizations.of(context)!;
+    if (percentLeft > 0.8) return l10n.budget_status_good;
+    if (percentLeft > 0.3) return l10n.budget_status_warning;
+    if (percentLeft > 0) return l10n.budget_status_low;
+    return l10n.budget_status_over;
+  }
+
+  String getPeriodText(BuildContext context, String periodType) {
+    final l10n = AppLocalizations.of(context)!;
+    switch (periodType) {
+      case 'MONTHLY':
+        return l10n.budget_period_monthly;
+      case 'WEEKLY':
+        return l10n.budget_period_weekly;
+      case 'DAILY':
+        return l10n.budget_period_daily;
+      default:
+        return '';
+    }
   }
 
   @override
@@ -35,7 +51,8 @@ class BudgetCard extends StatelessWidget {
     }
 
     final statusColor = getBudgetColor(percentLeft);
-    final statusText = getBudgetStatusText(percentLeft);
+    final statusText = getBudgetStatusText(context, percentLeft);
+    final l10n = AppLocalizations.of(context)!;
 
     return Card(
       elevation: 2,
@@ -47,29 +64,25 @@ class BudgetCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Текущий бюджет: ${budget.plannedAmount} ₽',
+              l10n.budget_current(budget.plannedAmount.toStringAsFixed(2)),
               style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.black, // черный текст!
+                color: Colors.black,
               ),
             ),
             Text(
-              'Период: ${budget.plannedPeriod == 'MONTHLY'
-                  ? 'Месяц'
-                  : budget.plannedPeriod == 'WEEKLY'
-                  ? 'Неделя'
-                  : 'День'}',
+              '${l10n.budget_period}: ${getPeriodText(context, budget.plannedPeriod)}',
               style: const TextStyle(color: Colors.black),
             ),
             if (periodStart != null && periodEnd != null)
               Text(
-                'Дата окончания: ${periodEnd!.toLocal().toString().split(' ')[0]}',
+                l10n.budget_period_ends(periodEnd!.toLocal().toString().split(' ')[0]),
                 style: const TextStyle(color: Colors.black),
               ),
             const SizedBox(height: 8),
             Text(
-              'Осталось: ${budget.currentBalance.toStringAsFixed(2)} ₽',
+              l10n.budget_remaining(budget.currentBalance.toStringAsFixed(2)),
               style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,

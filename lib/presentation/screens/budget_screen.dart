@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/entity/budget.dart';
 import '../views/budget_card.dart';
 import '../views/budget_form.dart';
@@ -89,12 +90,16 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(const SnackBar(content: Text('Бюджет успешно сохранён')));
+      ).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.of(context)!.budget_success_saved)),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
+
     if (_loading) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -103,7 +108,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Бюджет'),
+        title: Text(loc.budget), // локализация
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -117,9 +122,9 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 periodEnd: periodEnd,
               ),
             const SizedBox(height: 8),
-            const Text(
-              'Изменить лимит бюджета:',
-              style: TextStyle(fontWeight: FontWeight.bold),
+            Text(
+              loc.budget_edit_limit,
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             BudgetForm(
               formKey: _formKey,

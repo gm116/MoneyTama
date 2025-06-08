@@ -5,6 +5,7 @@ import 'package:moneytama/presentation/navigation/navigation_service.dart';
 import 'package:moneytama/presentation/screens/decoration_screen.dart';
 import 'package:moneytama/presentation/state/pet_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../di/di.dart';
 import '../views/operations_list.dart';
@@ -54,9 +55,10 @@ class MainScreenState extends State<MainScreen> {
       ),
       body: Column(
         children: [
-          Row(children: [_CustomizePetButton(), Text(
-            notifier.pet.name
-          )]),
+          Row(children: [
+            _CustomizePetButton(),
+            Text(notifier.pet.name)
+          ]),
           PetWidget(width: screenWidth, height: screenHeight / 3),
           RecentOperationsList(limit: 2, width: screenWidth, height: 310),
           Padding(
@@ -81,10 +83,7 @@ class _CustomizePetButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        // todo: а где routenames??
-        // Navigator.of(context).pushNamed(RouteNames.customizePet);
-      },
+      onPressed: () {},
       style: ElevatedButton.styleFrom(shape: const CircleBorder()),
       child: SizedBox(
         height: 30,
@@ -119,6 +118,7 @@ class _GoToHistoryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return ElevatedButton(
       onPressed: () {
         getIt<NavigationService>().navigateTo(AddOperationScreen.routeName);
@@ -128,7 +128,7 @@ class _GoToHistoryButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
-      child: const Text("Перейти в историю"),
+      child: Text(l10n.history),
     );
   }
 }

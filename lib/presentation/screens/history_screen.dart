@@ -12,6 +12,7 @@ import '../views/chart_segment.dart';
 import '../views/history_top_block.dart';
 import '../views/pie_chart_block.dart';
 import 'add_operation_screen.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // <--- импорт локализации
 
 class HistoryScreen extends StatefulWidget {
   static const String routeName = '/history';
@@ -31,6 +32,8 @@ class HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!; // локали
+
     return BlocProvider(
       create: (_) =>
           HistoryCubit(
@@ -42,7 +45,7 @@ class HistoryScreenState extends State<HistoryScreen> {
           if (state is HistoryError) {
             logger.severe('Error loading history');
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Ошибка загрузки истории')),
+              SnackBar(content: Text(loc.history_no_operations)),
             );
           }
         },
@@ -75,12 +78,16 @@ class HistoryScreenState extends State<HistoryScreen> {
                       children: [
                         DropdownButton<String>(
                           value: _selectedPeriod,
-                          items: const [
-                            DropdownMenuItem(value: 'week', child: Text(
-                                'Неделя')),
-                            DropdownMenuItem(value: 'month', child: Text(
-                                'Месяц')),
-                            DropdownMenuItem(value: 'year', child: Text('Год')),
+                          items: [
+                            DropdownMenuItem(
+                                value: 'week',
+                                child: Text(loc.budget_period_weekly)),
+                            DropdownMenuItem(
+                                value: 'month',
+                                child: Text(loc.budget_period_monthly)),
+                            DropdownMenuItem(
+                                value: 'year',
+                                child: Text(loc.budget_period_year)),
                           ],
                           onChanged: (value) {
                             setState(() {
@@ -105,12 +112,12 @@ class HistoryScreenState extends State<HistoryScreen> {
                           ),
                           child: SizedBox(
                             height: 16,
-                          child:
-                          Row(
+                            child: Row(
                               children: [
-                                Icon(Icons.add, size: 15),
-                                Text('Новая операция',
-                                  style: TextStyle(
+                                const Icon(Icons.add, size: 15),
+                                Text(
+                                  loc.operation_add,
+                                  style: const TextStyle(
                                     fontSize: 14,
                                   ),
                                 ),
@@ -137,7 +144,7 @@ class HistoryScreenState extends State<HistoryScreen> {
                               },
                               total: totalIncome,
                               data: incomeData,
-                              title: 'Доходы'
+                              title: loc.operation_income
                           ),
                         ),
                         Expanded(
@@ -154,14 +161,14 @@ class HistoryScreenState extends State<HistoryScreen> {
                               },
                               total: totalExpense,
                               data: expenseData,
-                              title: 'Траты'
+                              title: loc.operation_expense
                           ),
                         ),
                       ],
                     ),
                   if (_showIncomeDetails)
                     PieChartBlock(
-                      title: 'Доходы',
+                      title: loc.operation_income,
                       data: incomeData,
                       operations: _filteredOperations
                           .whereType<Income>()
@@ -180,7 +187,7 @@ class HistoryScreenState extends State<HistoryScreen> {
                     ),
                   if (_showExpenseDetails)
                     PieChartBlock(
-                      title: 'Траты',
+                      title: loc.operation_expense,
                       data: expenseData,
                       operations: _filteredOperations
                           .whereType<Expense>()
@@ -198,7 +205,9 @@ class HistoryScreenState extends State<HistoryScreen> {
                           .tertiaryContainer,
                     ),
                   Expanded(
-                    child: ListView.builder(
+                    child: _filteredOperations.isEmpty
+                        ? Center(child: Text(loc.history_no_operations))
+                        : ListView.builder(
                       padding: const EdgeInsets.all(16.0),
                       itemCount: _filteredOperations.length,
                       itemBuilder: (context, index) {
@@ -217,8 +226,8 @@ class HistoryScreenState extends State<HistoryScreen> {
                 ],
               );
             } else if (state is HistoryError) {
-              return const Center(
-                child: Text('Ошибка загрузки истории'),
+              return Center(
+                child: Text(loc.history_no_operations),
               );
             }
             return const SizedBox.shrink();

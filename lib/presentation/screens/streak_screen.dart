@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moneytama/presentation/screens/main_scaffold.dart';
 import 'package:moneytama/presentation/views/streak_info_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../tools/logger.dart';
 import '../cubit/streak/streak_cubit.dart';
@@ -17,6 +18,7 @@ class StreakScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     logger.info('StreakScreen build');
+    final l10n = AppLocalizations.of(context)!;
     return BlocProvider(
       create: (_) {
         final cubit = StreakCubit(getIt());
@@ -46,18 +48,22 @@ class StreakScreen extends StatelessWidget {
                         size: 100,
                       ),
                       const SizedBox(height: 20),
-                      const Text(
-                        '🔥 Your current streak:',
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
+                      Text(
+                        l10n.streak_title,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 10),
                       Text(
-                        '${state.currentStreak} days!',
-                        style: TextStyle(fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.orange),
+                        l10n.streak_info(state.currentStreak),
+                        style: const TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 20),
@@ -65,12 +71,9 @@ class StreakScreen extends StatelessWidget {
                       const SizedBox(height: 40),
                       ElevatedButton(
                         onPressed: () {
-                          // go to home screen
-                          getIt<NavigationService>().navigateTo(
-                            MainScaffold.routeName,
-                          );
+                          getIt<NavigationService>().navigateTo(MainScaffold.routeName);
                         },
-                        child: const Text('Continue'),
+                        child: Text(l10n.streak_continue),
                       ),
                     ],
                   ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:moneytama/domain/entity/operation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 class RecentOperationsList extends StatefulWidget {
   final int limit;
@@ -48,9 +50,9 @@ class RecentOperationListState extends State<RecentOperationsList> {
       height: widget.height,
       width: widget.width,
       child:
-          operations.isEmpty
-              ? const Center(child: Text("Пока нет операций!"))
-              : ListView.builder(
+      operations.isEmpty
+          ? Center(child: Text(AppLocalizations.of(context)!.history_no_operations))
+          : ListView.builder(
                 itemCount: operations.length,
                 itemBuilder: (context, index) {
                   final op = operations[index];

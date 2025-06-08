@@ -7,6 +7,7 @@ import '../../tools/logger.dart';
 import '../cubit/decoration/decoration_state.dart';
 import '../di/di.dart';
 import '../views/swaying_svg.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class DecorationScreen extends StatelessWidget {
   final Function(int) updateIndex;
@@ -15,6 +16,8 @@ class DecorationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context);
+
     return BlocProvider(
       create: (_) {
         final cubit = DecorationCubit(
@@ -28,8 +31,8 @@ class DecorationScreen extends StatelessWidget {
           if (state is DecorationError) {
             logger.severe('DecorationError state received');
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Error loading decoration. Please try again.'),
+              SnackBar(
+                content: Text(loc!.decoration_error),
               ),
             );
           }
@@ -47,7 +50,7 @@ class DecorationScreen extends StatelessWidget {
                         width: 200,
                         height: 200,
                     ),
-                    ),
+                  ),
                 );
               } else if (state is DecorationLoading) {
                 return const Center(child: CircularProgressIndicator());

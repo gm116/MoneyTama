@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moneytama/presentation/cubit/operation/operation_cubit.dart';
 import 'package:moneytama/presentation/cubit/operation/operation_state.dart';
 import 'package:moneytama/tools/logger.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../domain/entity/operation.dart';
 import '../di/di.dart';
@@ -44,17 +45,17 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Добавить категорию'),
+          title: Text(AppLocalizations.of(context)!.operation_add_category),
           content: TextFormField(
             controller: customCategoryController,
-            decoration: const InputDecoration(hintText: 'Введите категорию'),
+            decoration: InputDecoration(hintText: AppLocalizations.of(context)!.operation_category),
           ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: const Text('Отмена'),
+              child: Text(MaterialLocalizations.of(context).cancelButtonLabel),
             ),
             TextButton(
               onPressed: () {
@@ -64,7 +65,7 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                 });
                 Navigator.of(context).pop();
               },
-              child: const Text('Сохранить'),
+              child: Text(MaterialLocalizations.of(context).okButtonLabel),
             ),
           ],
         );
@@ -87,10 +88,11 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
   }
 
   void _submitOperation(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     if (_formKey.currentState!.validate()) {
       final double sum = double.parse(_sumController.text);
       final String description = _descriptionController.text;
-      final String category = _selectedCategory ?? 'Другое';
+      final String category = _selectedCategory ?? loc.operation_category;
       final DateTime timestamp = _selectedDate ?? DateTime.now();
       final bool planned = _isPlanned;
 
@@ -118,6 +120,7 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context)!;
     return BlocProvider(
       create: (_) =>
           OperationCubit(
@@ -130,7 +133,7 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
           ),
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Добавить операцию'),
+          title: Text(loc.operation_add),
         ),
         body: BlocListener<OperationCubit, OperationState>(
           listener: (context, state) {
@@ -138,12 +141,12 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
               logger.info('Operation added successfully');
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Операция успешно добавлена')),
+                SnackBar(content: Text(loc.operation_success)),
               );
             } else if (state is OperationError) {
               logger.severe('Error adding operation');
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Ошибка при добавлении операции')),
+                SnackBar(content: Text(loc.operation_error)),
               );
             } else if (state is OperationLoading) {
               logger.info('Loading operation categories...');
@@ -177,14 +180,14 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                             context.read<OperationCubit>().startExpense();
                           }
                         },
-                        children: const [
+                        children: [
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Text('Доход'),
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Text(loc.operation_income),
                           ),
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Text('Трата'),
+                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Text(loc.operation_expense),
                           ),
                         ],
                       ),
@@ -192,13 +195,13 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                       TextFormField(
                         controller: _sumController,
                         keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(labelText: 'стоимость'),
+                        decoration: InputDecoration(labelText: loc.budget_amount),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Пожалуйста, введите стоимость';
+                            return loc.form_amount_required;
                           }
                           if (double.tryParse(value) == null) {
-                            return 'Пожалуйста, введите корректное число';
+                            return loc.form_amount_number;
                           }
                           return null;
                         },
@@ -206,11 +209,11 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                       const SizedBox(height: 16),
                       TextFormField(
                         controller: _descriptionController,
-                        decoration: const InputDecoration(
-                            labelText: 'Описание'),
+                        decoration: InputDecoration(
+                            labelText: loc.form_desc_required),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Пожалуйста, введите описание';
+                            return loc.form_desc_required;
                           }
                           return null;
                         },
@@ -230,32 +233,32 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                             _selectedCategory = value;
                           });
                         },
-                        decoration: const InputDecoration(
-                            labelText: 'Категория'),
+                        decoration: InputDecoration(
+                            labelText: loc.operation_category),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Пожалуйста, выберите категорию';
+                            return loc.form_category_required;
                           }
                           return null;
                         },
                       ),
                       TextButton(
                         onPressed: _addCustomCategory,
-                        child: const Text('Добавить категорию'),
+                        child: Text(loc.operation_add_category),
                       ),
                       const SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(_selectedDate != null
-                              ? 'Дата: ${_selectedDate!
+                              ? '${loc.form_select_date}: ${_selectedDate!
                               .toLocal()
                               .toString()
                               .split(' ')[0]}'
-                              : 'Дата не выбрана'),
+                              : loc.form_date_not_selected),
                           TextButton(
                             onPressed: _pickDate,
-                            child: const Text('Выбрать дату'),
+                            child: Text(loc.form_select_date),
                           ),
                         ],
                       ),
@@ -273,13 +276,13 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                               },
                             ),
                             if (!_isIncome)
-                              const Text('Запланированная трата'),
+                              Text(loc.operation_planned_expense),
                           ],
                         )
                       ),
                       ElevatedButton(
                         onPressed: () => _submitOperation(context),
-                        child: const Text('Сохранить операцию'),
+                        child: Text(loc.operation_save),
                       ),
                     ],
                   ),

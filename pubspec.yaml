@@ -10,6 +10,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   uuid: ^4.3.3
 
   cupertino_icons: ^1.0.8
@@ -28,7 +30,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  flutter_gen_runner: any
   flutter_lints: ^5.0.0
 
 flutter:
