@@ -41,8 +41,20 @@ class _MainScaffoldState extends State<MainScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          _currentIndex == 0
+              ? 'Дом'
+              : _currentIndex == 1
+                  ? 'История расходов'
+                  : _currentIndex == 2
+                      ? 'Украшение питомца'
+                      : 'Настройки',
+        ),
+      ),
       body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
         onTap: _updateIndex,
         items: const [
