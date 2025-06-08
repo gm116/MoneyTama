@@ -1,13 +1,14 @@
 class Operation {
-  final double sum;
-  final DateTime timestamp;
-  String description;
+  final double _sum;
+  final DateTime _timestamp;
+  final String _description;
 
-  Operation({
-    required this.sum,
-    required this.timestamp,
-    required this.description,
-  });
+  Operation(this._sum, this._timestamp, [String description = ""])
+      : _description = description;
+
+  double get sum => _sum;
+  DateTime get timestamp => _timestamp;
+  String get description => _description;
 
   @override
   String toString() {
@@ -16,14 +17,18 @@ class Operation {
 }
 
 class Income extends Operation {
-  final String category;
+  final String _category;
+
+  String get category => _category;
+
 
   Income({
-    required this.category,
-    required super.sum,
-    required super.timestamp,
-    required super.description,
-  });
+    required double sum,
+    required DateTime timestamp,
+    String description = "",
+    required String category,
+  })  : _category = category,
+        super(sum, timestamp, description);
 
   @override
   String toString() {
@@ -32,16 +37,22 @@ class Income extends Operation {
 }
 
 class Expense extends Operation {
-  final String category;
-  final bool planned;
+  final String _category;
+  final bool _planned;
+
+  String get category => _category;
+  bool get planned => _planned;
+
 
   Expense({
-    required this.planned,
-    required this.category,
-    required super.sum,
-    required super.timestamp,
-    required super.description,
-  });
+    required double sum,
+    required DateTime timestamp,
+    String description = "",
+    required String category,
+    required bool planned,
+  })  : _category = category,
+        _planned = planned,
+        super(sum, timestamp, description);
 
   @override
   String toString() {
