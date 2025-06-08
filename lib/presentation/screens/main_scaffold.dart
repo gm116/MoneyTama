@@ -50,7 +50,7 @@ class _MainScaffoldState extends State<MainScaffold> {
                       : 'Настройки',
         ),
       ),
-      body: _pages[_currentIndex],
+      body: Padding(padding: const EdgeInsets.all(8.0), child: _pages[_currentIndex]),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _currentIndex,
