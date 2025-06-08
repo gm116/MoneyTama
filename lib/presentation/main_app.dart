@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:moneytama/presentation/screens/home_screen.dart';
+import 'package:moneytama/presentation/screens/main_scaffold.dart';
+import 'package:moneytama/presentation/screens/streak_screen.dart';
 
+import '../tools/logger.dart';
 import 'app_theme.dart';
+import 'di/di.dart';
 import 'navigation/navigation_service.dart';
 
 class MyApp extends StatelessWidget {
@@ -9,11 +12,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    logger.info('MyApp build');
     return MaterialApp(
-      title: 'MoneyTama',
-      theme: AppTheme.theme(false),
-      initialRoute: RouteNames.home,
-      onGenerateRoute: RoutesBuilder.onGenerateRoute,
     );
   }
 }

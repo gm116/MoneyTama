@@ -1,31 +1,16 @@
 import 'package:flutter/material.dart';
-import '../screens/main_screen.dart';
 
-abstract class RouteNames {
-  const RouteNames._();
+class NavigationService {
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  static const home = '/';
-  static const streak = 'streak';
-  static const customizePet = 'customizePet';
-  // TODO add routes for each screen
-}
+  Future<dynamic>? navigateTo(String routeName, {Object? arguments}) {
+    return navigatorKey.currentState?.pushNamed(
+      routeName,
+      arguments: arguments,
+    );
+  }
 
-class RoutesBuilder {
-  static Route<Object?>? onGenerateRoute(RouteSettings settings) {
-    switch (settings.name) {
-      case RouteNames.home:
-        return MaterialPageRoute(
-          builder: (_) => const MainScreen(),
-          settings: settings,
-        );
-
-      case RouteNames.streak:
-        return null;
-
-      case RouteNames.customizePet:
-        return null;
-    }
-
-    return null;
+  void goBack() {
+    navigatorKey.currentState?.pop();
   }
 }
