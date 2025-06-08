@@ -1,7 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../../domain/entity/budget.dart';
 import '../../domain/entity/category.dart';
 import '../../domain/entity/operation.dart';
 import '../../domain/repository/local_repository.dart';
@@ -49,76 +48,76 @@ class LocalRepositorySqfliteImpl implements LocalRepository {
           )
         ''');
 
-        // Дефолтные категории расходов
+        // Дефолтные категории расходов на русском с большой буквы
         await db.insert('categories', {
-          'name': 'FOOD',
+          'name': 'Еда',
           'type': 'expense',
           'isCustom': 0,
         });
         await db.insert('categories', {
-          'name': 'TRANSPORT',
+          'name': 'Транспорт',
           'type': 'expense',
           'isCustom': 0,
         });
         await db.insert('categories', {
-          'name': 'MEDICINE',
+          'name': 'Медицина',
           'type': 'expense',
           'isCustom': 0,
         });
         await db.insert('categories', {
-          'name': 'EDUCATION',
+          'name': 'Образование',
           'type': 'expense',
           'isCustom': 0,
         });
         await db.insert('categories', {
-          'name': 'ENTERTAINMENT',
+          'name': 'Развлечения',
           'type': 'expense',
           'isCustom': 0,
         });
         await db.insert('categories', {
-          'name': 'BEAUTY',
+          'name': 'Красота',
           'type': 'expense',
           'isCustom': 0,
         });
         await db.insert('categories', {
-          'name': 'MONEY TRANSFERS',
+          'name': 'Переводы',
           'type': 'expense',
           'isCustom': 0,
         });
         await db.insert('categories', {
-          'name': 'OTHER',
+          'name': 'Другое',
           'type': 'expense',
           'isCustom': 0,
         });
 
-        // Дефолтные категории доходов
+        // Дефолтные категории доходов на русском с большой буквы
         await db.insert('categories', {
-          'name': 'SALARY',
+          'name': 'Зарплата',
           'type': 'income',
           'isCustom': 0,
         });
         await db.insert('categories', {
-          'name': 'MONEY TRANSFERS',
+          'name': 'Переводы',
           'type': 'income',
           'isCustom': 0,
         });
         await db.insert('categories', {
-          'name': 'ESTATE INCOMES',
+          'name': 'Недвижимость',
           'type': 'income',
           'isCustom': 0,
         });
         await db.insert('categories', {
-          'name': 'PAYMENTS',
+          'name': 'Выплаты',
           'type': 'income',
           'isCustom': 0,
         });
         await db.insert('categories', {
-          'name': 'DEPOSIT PAYMENTS',
+          'name': 'Депозиты',
           'type': 'income',
           'isCustom': 0,
         });
         await db.insert('categories', {
-          'name': 'OTHER',
+          'name': 'Другое',
           'type': 'income',
           'isCustom': 0,
         });
@@ -219,23 +218,6 @@ class LocalRepositorySqfliteImpl implements LocalRepository {
     }
   }
 
-  // ---------------------- Budget ----------------------
-  @override
-  Future<void> setBudget(Budget budget) async {
-    final db = await database;
-    await db.delete('budgets');
-    await db.insert('budgets', budget.toMap());
-  }
-
-  @override
-  Future<Budget?> getBudget() async {
-    final db = await database;
-    final maps = await db.query('budgets');
-    if (maps.isNotEmpty) {
-      return Budget.fromMap(maps.first);
-    }
-    return null;
-  }
 
   // ---------------------- Category ----------------------
   @override
