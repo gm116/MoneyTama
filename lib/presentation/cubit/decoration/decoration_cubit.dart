@@ -1,5 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moneytama/domain/entity/pet.dart';
+import 'package:moneytama/tools/pet_painter.dart';
+
 
 import '../../../domain/usecase/get_pet_colors_usecase.dart';
 import '../../../domain/usecase/set_pet_colors_usecase.dart';
@@ -35,6 +38,22 @@ class DecorationCubit extends Cubit<DecorationState> {
       logger.info('Pet: $petString');
     } catch (error) {
       logger.severe('Error loading pet: $error');
+      emit(DecorationError());
+    }
+  }
+
+
+  Future<void> updateColors({
+    required String mainColor,
+    required String secondaryColor,
+    required String tertiaryColor,
+  }) async {
+    try {
+      emit(DecorationLoading());
+      await setPetColorsUseCase.execute(mainColor, secondaryColor, tertiaryColor);
+      await loadPet();
+    } catch (error) {
+      logger.severe('Error updating colors: $error');
       emit(DecorationError());
     }
   }

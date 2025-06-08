@@ -1,4 +1,5 @@
 import '../../domain/entity/budget.dart';
+import '../entity/pet.dart';
 
 abstract class SharedPrefRepository {
   Future<Map<DateTime, bool>> getWeekAttendance();
@@ -9,4 +10,6 @@ abstract class SharedPrefRepository {
   Future<void> setBudget(Budget budget);
   Future<List<String>> getPetColors();
   Future<void> setPetColors(List<String> colors);
+  Future<Pet?> getPet();
+  Future<void> setPet(Pet pet);
 }

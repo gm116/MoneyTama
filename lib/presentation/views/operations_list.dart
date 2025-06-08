@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:moneytama/domain/entity/operation.dart';
+
+import '../cubit/history/history_cubit.dart';
+import '../cubit/history/history_state.dart';
+import '../di/di.dart';
 
 class RecentOperationsList extends StatefulWidget {
   final int limit;
@@ -24,39 +29,56 @@ class RecentOperationListState extends State<RecentOperationsList> {
   @override
   void initState() {
     super.initState();
-    // TODO get ops with widget.limit
-    operations = [
-      Income(
-        category: "Salary",
-        sum: 2000.00,
-        timestamp: DateTime.now().subtract(const Duration(days: 1)),
-        description: "Monthly salary",
-      ),
-      Expense(
-        planned: true,
-        category: "Food",
-        sum: 50.75,
-        timestamp: DateTime.now().subtract(const Duration(days: 2)),
-        description: "Grocery shopping",
-      ),
-    ];
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: widget.height,
-      width: widget.width,
-      child:
-          operations.isEmpty
-              ? const Center(child: Text("Пока нет операций!"))
-              : ListView.builder(
-                itemCount: operations.length,
-                itemBuilder: (context, index) {
-                  final op = operations[index];
-                  return OperationItem(operation: op);
-                },
-              ),
+    return BlocProvider<HistoryCubit>(
+      create: (context) {
+        final cubit = HistoryCubit(
+          getLastOperationsUseCase: getIt(),
+          removeOperationUseCase: getIt(),
+        );
+        cubit.loadHistory();
+        return cubit;
+      },
+      child: BlocBuilder<HistoryCubit, HistoryState>(
+        builder: (context, state) {
+          if (state is HistoryLoading) {
+            return SizedBox(
+              height: widget.height,
+              width: widget.width,
+              child: const Center(child: CircularProgressIndicator()),
+            );
+          } else if (state is HistoryInfo) {
+            final List<Operation> operations = state.operations.sublist(
+              0,
+              state.operations.length > 3 ? widget.limit + 1 : state.operations.length,
+            );
+            return SizedBox(
+              height: widget.height,
+              width: widget.width,
+              child:
+                  operations.isEmpty
+                      ? const Center(child: Text("Пока нет операций!"))
+                      : ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: operations.length,
+                        itemBuilder: (context, index) {
+                          final op = operations[index];
+                          return OperationItem(operation: op);
+                        },
+                      ),
+            );
+          }
+          return const SizedBox.shrink();
+        },
+      ),
     );
   }
 }
@@ -66,8 +88,12 @@ class OperationItem extends StatefulWidget {
   final bool showDeleteButton;
   final Function? onDelete;
 
-  const OperationItem(
-      {super.key, required this.operation, this.showDeleteButton = false, this.onDelete});
+  const OperationItem({
+    super.key,
+    required this.operation,
+    this.showDeleteButton = false,
+    this.onDelete,
+  });
 
   @override
   State<StatefulWidget> createState() => OperationItemState();
@@ -88,15 +114,12 @@ class OperationItemState extends State<OperationItem> {
     }
 
     final Color backgroundColor =
-    isIncome
-        ? Colors.green.shade100
-        : (isExpense ? Colors.red.shade100 : Colors.grey.shade200);
+        isIncome
+            ? Theme.of(context).colorScheme.primaryContainer
+            : Theme.of(context).colorScheme.tertiaryContainer;
     final String formattedSum =
         "${isIncome ? '+ ' : '- '}${op.sum.toStringAsFixed(2)}";
-
-    final String formattedDate = DateFormat.yMMMd().add_Hm().format(
-      op.timestamp,
-    );
+    final String formattedDate = DateFormat.MMMd("RU_ru").format(op.timestamp);
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -104,7 +127,6 @@ class OperationItemState extends State<OperationItem> {
       child: Padding(
         padding: const EdgeInsets.all(15),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
               child: Column(
@@ -113,18 +135,34 @@ class OperationItemState extends State<OperationItem> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        formattedSum,
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: isIncome ? Colors.green : Colors.red,
-                        ),
+                      Row(
+                        children: [
+                          Text(
+                            formattedSum,
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: isIncome ? Colors.purple : Colors.red,
+                            ),
+                          ),
+                          if (category.isNotEmpty) ...[
+                            const SizedBox(width: 8),
+                            Text(
+                              category,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ],
                       ),
                       Text(
                         formattedDate,
                         style: const TextStyle(
-                            fontSize: 14, color: Colors.black54),
+                          fontSize: 14,
+                          color: Colors.black54,
+                        ),
                       ),
                     ],
                   ),
@@ -132,21 +170,11 @@ class OperationItemState extends State<OperationItem> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (category.isNotEmpty)
-                            Text(
-                              category,
-                              style: const TextStyle(
-                                  fontSize: 14, color: Colors.black87),
-                            ),
-                          const SizedBox(height: 4),
-                          Text(
-                            op.description.isEmpty ? "" : op.description,
-                            style: const TextStyle(fontSize: 16),
-                          ),
-                        ],
+                      Expanded(
+                        child: Text(
+                          op.description,
+                          style: const TextStyle(fontSize: 16),
+                        ),
                       ),
                       if (widget.showDeleteButton)
                         IconButton(
