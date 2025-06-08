@@ -21,6 +21,14 @@ class Budget {
             : double.parse(map['currentBalance'].toString()),
   );
 
+  Budget copyWith({int? id, double? plannedAmount, String? plannedPeriod, double? currentBalance}) {
+    return Budget(
+      plannedAmount: plannedAmount ?? this.plannedAmount,
+      plannedPeriod: plannedPeriod ?? this.plannedPeriod,
+      currentBalance: currentBalance ?? this.currentBalance,
+    );
+  }
+
   Map<String, dynamic> toMap() => {
     'plannedAmount': plannedAmount,
     'plannedPeriod': plannedPeriod,

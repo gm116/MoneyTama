@@ -33,9 +33,9 @@ void setupDependencies() {
   getIt.registerLazySingleton<LocalRepository>(() => LocalRepositorySqfliteImpl());
 
   getIt.registerLazySingleton(() => AddExpenseCategoryUseCase(getIt<LocalRepository>()));
-  getIt.registerLazySingleton(() => AddExpenseUseCase(getIt<LocalRepository>()));
+  getIt.registerLazySingleton(() => AddExpenseUseCase(getIt<LocalRepository>(), getIt<SharedPrefRepository>()));
   getIt.registerLazySingleton(() => AddIncomeCategoryUseCase(getIt<LocalRepository>()));
-  getIt.registerLazySingleton(() => AddIncomeUseCase(getIt<LocalRepository>()));
+  getIt.registerLazySingleton(() => AddIncomeUseCase(getIt<LocalRepository>(), getIt<SharedPrefRepository>()));
   getIt.registerLazySingleton(() => GetExpenseCategoriesUseCase(getIt<LocalRepository>()));
   getIt.registerLazySingleton(() => GetIncomeCategoriesUseCase(getIt<LocalRepository>()));
   getIt.registerLazySingleton(() => GetLastOperationsUseCase(getIt<LocalRepository>()));
@@ -44,5 +44,5 @@ void setupDependencies() {
   getIt.registerLazySingleton(() => SetBudgetUseCase(getIt<SharedPrefRepository>()));
   getIt.registerLazySingleton(() => GetBudgetUseCase(getIt<SharedPrefRepository>()));
   getIt.registerLazySingleton(() => RemoveCategoryUseCase(getIt<LocalRepository>()));
-  getIt.registerLazySingleton(() => RemoveOperationUseCase(getIt<LocalRepository>()));
+  getIt.registerLazySingleton(() => RemoveOperationUseCase(getIt<LocalRepository>(), getIt<SharedPrefRepository>()));
 }
