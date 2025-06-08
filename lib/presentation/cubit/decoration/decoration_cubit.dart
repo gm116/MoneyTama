@@ -1,6 +1,5 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:moneytama/tools/pet_painter.dart';
 
 import '../../../domain/usecase/get_pet_colors_usecase.dart';
 import '../../../domain/usecase/set_pet_colors_usecase.dart';
