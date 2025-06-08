@@ -1,5 +1,4 @@
 import '../entity/operation.dart';
-import '../entity/budget.dart';
 import '../entity/category.dart';
 
 abstract class LocalRepository {
@@ -9,10 +8,6 @@ abstract class LocalRepository {
   Future<void> removeOperation(Operation operation);
   /// Вернуть последние [count] операций (если count == 0, вернуть все)
   Future<List<Operation>> getLastOperations({int count = 0});
-
-  // Бюджет
-  Future<void> setBudget(Budget budget);
-  Future<Budget?> getBudget();
 
   // Категории
   Future<void> addCategory(Category category);

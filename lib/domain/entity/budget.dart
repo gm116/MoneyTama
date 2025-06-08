@@ -1,18 +1,15 @@
 class Budget {
-  final int? id;
   final double plannedAmount;
   final String plannedPeriod; // 'MONTHLY', 'WEEKLY', 'DAILY'
   final double currentBalance;
 
   Budget({
-    this.id,
     required this.plannedAmount,
     required this.plannedPeriod,
     required this.currentBalance,
   });
 
   factory Budget.fromMap(Map<String, dynamic> map) => Budget(
-    id: map['id'] as int?,
     plannedAmount:
         map['plannedAmount'] is int
             ? (map['plannedAmount'] as int).toDouble()
@@ -25,7 +22,6 @@ class Budget {
   );
 
   Map<String, dynamic> toMap() => {
-    'id': id,
     'plannedAmount': plannedAmount,
     'plannedPeriod': plannedPeriod,
     'currentBalance': currentBalance,
@@ -33,5 +29,5 @@ class Budget {
 
   @override
   String toString() =>
-      'Budget(id: $id, plannedAmount: $plannedAmount, plannedPeriod: $plannedPeriod, currentBalance: $currentBalance)';
+      'Budget(plannedAmount: $plannedAmount, plannedPeriod: $plannedPeriod, currentBalance: $currentBalance)';
 }

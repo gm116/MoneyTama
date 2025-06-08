@@ -3,10 +3,44 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/repository/shared_pref_repository.dart';
 import '../../tools/logger.dart';
+import '../../domain/entity/budget.dart';
+
 
 class SharedPrefRepositoryImpl implements SharedPrefRepository {
   static const String _attendanceKey = 'week_attendance';
   static const String _streakStartDateKey = 'streak_start_date';
+
+
+  static const _plannedAmountKey = 'budget_planned_amount';
+  static const _plannedPeriodKey = 'budget_planned_period';
+  static const _currentBalanceKey = 'budget_current_balance';
+
+  @override
+  Future<void> setBudget(Budget budget) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble(_plannedAmountKey, budget.plannedAmount);
+    await prefs.setString(_plannedPeriodKey, budget.plannedPeriod);
+    await prefs.setDouble(_currentBalanceKey, budget.currentBalance);
+  }
+
+  @override
+  Future<Budget?> getBudget() async {
+    final prefs = await SharedPreferences.getInstance();
+    final plannedAmount = prefs.getDouble(_plannedAmountKey);
+    final plannedPeriod = prefs.getString(_plannedPeriodKey);
+    final currentBalance = prefs.getDouble(_currentBalanceKey);
+
+    if (plannedAmount == null || plannedPeriod == null || currentBalance == null) {
+      return null; // Нет сохраненного бюджета
+    }
+
+    return Budget(
+      plannedAmount: plannedAmount,
+      plannedPeriod: plannedPeriod,
+      currentBalance: currentBalance,
+    );
+  }
+
 
   @override
   Future<Map<DateTime, bool>> getWeekAttendance() async {
