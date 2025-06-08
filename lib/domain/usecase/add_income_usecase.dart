@@ -12,13 +12,12 @@ class AddIncomeUseCase {
     required String description,
     required String category,
   }) {
-    final operation = Operation(
+    final income = Income(
+      category: category,
       sum: sum,
       timestamp: timestamp,
       description: description,
-      type: 'income',
-      category: category,
     );
-    return repository.addOperation(operation);
+    return repository.addOperation(income);
   }
 }

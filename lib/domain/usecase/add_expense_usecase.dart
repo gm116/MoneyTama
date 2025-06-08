@@ -11,14 +11,15 @@ class AddExpenseUseCase {
     required DateTime timestamp,
     required String description,
     required String category,
+    required bool planned,
   }) {
-    final operation = Operation(
+    final expense = Expense(
+      planned: planned,
+      category: category,
       sum: sum,
       timestamp: timestamp,
       description: description,
-      type: 'expense',
-      category: category,
     );
-    return repository.addOperation(operation);
+    return repository.addOperation(expense);
   }
 }
