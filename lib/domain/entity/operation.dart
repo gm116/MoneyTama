@@ -1,73 +1,42 @@
 class Operation {
+  final int? id;
   final double sum;
   final DateTime timestamp;
-  String description;
+  final String description;
+  final String type; // 'income' или 'expense'
+  final String category;
 
   Operation({
+    this.id,
     required this.sum,
     required this.timestamp,
     required this.description,
-  });
-
-  @override
-  String toString() {
-    return 'Operation(sum: $sum, time: $timestamp, description: $description)';
-  }
-}
-
-
-class Income extends Operation {
-  final IncomeCategory category;
-
-  Income({
+    required this.type,
     required this.category,
-    required super.sum,
-    required super.timestamp,
-    required super.description,
   });
 
+  factory Operation.fromMap(Map<String, dynamic> map) => Operation(
+    id: map['id'] as int?,
+    sum:
+        map['sum'] is int
+            ? (map['sum'] as int).toDouble()
+            : double.parse(map['sum'].toString()),
+    timestamp: DateTime.parse(map['timestamp'] as String),
+    description: map['description'] as String,
+    type: map['type'] as String,
+    category: map['category'] as String,
+  );
+
+  Map<String, dynamic> toMap() => {
+    'id': id,
+    'sum': sum,
+    'timestamp': timestamp.toIso8601String(),
+    'description': description,
+    'type': type,
+    'category': category,
+  };
+
   @override
-  String toString() {
-    return 'Income(category: $category, amount: $sum, timestamp: $timestamp, description: $description)';
-  }
-}
-
-
-class Expense extends Operation {
-  final ExpenseCategory category;
-  final bool planned;
-
-  Expense({
-    required this.planned,
-    required this.category,
-    required super.sum,
-    required super.timestamp,
-    required super.description,
-  });
-
-  @override
-  String toString() {
-    return 'Expense(planned: $planned, category: $category, amount: $sum, timestamp: $timestamp, description: $description)';
-  }
-}
-
-
-enum IncomeCategory {
-  salary,
-  moneyTransfers,
-  estateIncomes,
-  payments,
-  depositPayments,
-  other,
-}
-
-enum ExpenseCategory {
-  food,
-  transport,
-  medicine,
-  education,
-  beauty,
-  entertainment,
-  moneyTransfers,
-  other,
+  String toString() =>
+      'Operation(id: $id, sum: $sum, timestamp: $timestamp, description: $description, type: $type, category: $category)';
 }

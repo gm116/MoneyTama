@@ -1,10 +1,9 @@
 import '../repository/local_repository.dart';
 
 class RemoveOperationUseCase {
-  final LocalRepository _repository;
-  RemoveOperationUseCase(this._repository);
+  final LocalRepository repository;
 
-  Future<void> execute(String id) async {
-    await _repository.removeOperation(id);
-  }
-} 
+  RemoveOperationUseCase(this.repository);
+
+  Future<void> execute(String id) => repository.removeOperation(id);
+}

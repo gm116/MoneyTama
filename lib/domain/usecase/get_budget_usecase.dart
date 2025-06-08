@@ -2,10 +2,9 @@ import '../entity/budget.dart';
 import '../repository/local_repository.dart';
 
 class GetBudgetUseCase {
-  final LocalRepository _repository;
-  GetBudgetUseCase(this._repository);
+  final LocalRepository repository;
 
-  Future<Budget?> execute() async {
-    return await _repository.getBudget();
-  }
-} 
+  GetBudgetUseCase(this.repository);
+
+  Future<Budget?> execute() => repository.getBudget();
+}

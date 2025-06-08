@@ -2,10 +2,8 @@ import '../entity/operation.dart';
 import '../repository/local_repository.dart';
 
 class GetOperationsUseCase {
-  final LocalRepository _repository;
-  GetOperationsUseCase(this._repository);
+  final LocalRepository repository;
+  GetOperationsUseCase(this.repository);
 
-  Future<List<Operation>> execute() async {
-    return await _repository.getOperations();
-  }
-} 
+  Future<List<Operation>> execute() => repository.getOperations();
+}

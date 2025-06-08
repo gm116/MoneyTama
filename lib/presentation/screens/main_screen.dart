@@ -35,6 +35,14 @@ class MainScreenState extends State<MainScreen> {
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0.0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.local_fire_department, color: Colors.orange),
+            onPressed: () {
+              Navigator.of(context).pushNamed('/streak');
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(0, 60, 0, 0),

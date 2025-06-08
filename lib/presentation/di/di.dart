@@ -1,44 +1,37 @@
 import 'package:get_it/get_it.dart';
-import '../../data/datasource/shared_prefs_factory.dart';
-import '../../data/datasource/local_datasource.dart';
-import '../../data/repository/local_repository_impl.dart';
+
+import '../../data/service/shared_pref_repository_impl.dart';
+import '../../domain/repository/shared_pref_repository.dart';
+import '../../domain/usecase/get_streak_info_usecase.dart';
+import '../../data/service/local_repository_sqflite_impl.dart';
 import '../../domain/repository/local_repository.dart';
 import '../../domain/usecase/add_operation_usecase.dart';
 import '../../domain/usecase/get_operations_usecase.dart';
 import '../../domain/usecase/remove_operation_usecase.dart';
 import '../../domain/usecase/set_budget_usecase.dart';
 import '../../domain/usecase/get_budget_usecase.dart';
-import '../../data/service/shared_pref_repository_impl.dart';
-import '../../domain/repository/shared_pref_repository.dart';
-import '../../domain/usecase/get_streak_info_usecase.dart';
+import '../../domain/usecase/add_category_usecase.dart';
+import '../../domain/usecase/get_categories_usecase.dart';
+import '../../domain/usecase/remove_category_usecase.dart';
+
 import '../navigation/navigation_service.dart';
 
 final getIt = GetIt.instance;
 
-Future<void> setupDependencies() async {
-  // Navigation
+void setupDependencies() {
+  // Навигация
   getIt.registerLazySingleton(() => NavigationService());
 
-  // Existing dependencies
-  getIt.registerLazySingleton<SharedPrefRepository>(() {
-    return SharedPrefRepositoryImpl();
-  });
-
-  getIt.registerLazySingleton(() =>
-      GetStreakInfoUseCase(getIt<SharedPrefRepository>()));
-
-  // New dependencies
-  // Data sources
-  getIt.registerLazySingletonAsync<LocalDataSource>(
-    () => SharedPrefsFactory.create(),
+  getIt.registerLazySingleton(
+    () => GetStreakInfoUseCase(getIt<SharedPrefRepository>()),
   );
 
-  // Repositories
+  // Новое (sqflite)
   getIt.registerLazySingleton<LocalRepository>(
-    () => LocalRepositoryImpl(getIt<LocalDataSource>()),
+    () => LocalRepositorySqfliteImpl(),
   );
 
-  // Use cases
+  // Операции
   getIt.registerLazySingleton(
     () => AddOperationUseCase(getIt<LocalRepository>()),
   );
@@ -48,10 +41,19 @@ Future<void> setupDependencies() async {
   getIt.registerLazySingleton(
     () => RemoveOperationUseCase(getIt<LocalRepository>()),
   );
+
+  // Бюджет
+  getIt.registerLazySingleton(() => SetBudgetUseCase(getIt<LocalRepository>()));
+  getIt.registerLazySingleton(() => GetBudgetUseCase(getIt<LocalRepository>()));
+
+  // Категории
   getIt.registerLazySingleton(
-    () => SetBudgetUseCase(getIt<LocalRepository>()),
+    () => AddCategoryUseCase(getIt<LocalRepository>()),
   );
   getIt.registerLazySingleton(
-    () => GetBudgetUseCase(getIt<LocalRepository>()),
+    () => GetCategoriesUseCase(getIt<LocalRepository>()),
+  );
+  getIt.registerLazySingleton(
+    () => RemoveCategoryUseCase(getIt<LocalRepository>()),
   );
 }
