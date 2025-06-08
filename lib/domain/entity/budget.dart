@@ -2,7 +2,7 @@ import 'operation.dart';
 
 class Budget {
   final double plannedAmount;
-  final Period plannedPeriod;
+  Period plannedPeriod;
   double currentBalance;
 
   Budget({

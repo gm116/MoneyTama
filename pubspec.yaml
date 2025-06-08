@@ -14,8 +14,12 @@ dependencies:
   cupertino_icons: ^1.0.8
   logging: ^1.2.0
   get_it: ^8.0.3
+  path_provider: ^2.0.11
+  provider: ^6.0.0
+  flutter_svg: ^2.0.5
   shared_preferences: ^2.0.15
   flutter_bloc: ^9.1.1
+
 
 dev_dependencies:
   flutter_test:
@@ -24,3 +28,15 @@ dev_dependencies:
   flutter_lints: ^5.0.0
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/
+
+  fonts:
+    - family: Montserrat
+      fonts:
+        - asset: assets/fonts/Montserrat-SemiBold.ttf
+        - asset: assets/fonts/Montserrat-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Montserrat-Light.ttf
+        - asset: assets/fonts/Montserrat-Regular.ttf
