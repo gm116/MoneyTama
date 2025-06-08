@@ -1,15 +1,17 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:moneytama/presentation/navigation/navigation_service.dart';
-import 'package:moneytama/presentation/screens/decoration_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:moneytama/domain/entity/pet.dart';
 import 'package:moneytama/presentation/state/pet_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:moneytama/presentation/navigation/navigation_service.dart';
+import 'package:moneytama/presentation/screens/decoration_screen.dart';
+import 'package:moneytama/presentation/views/operations_list.dart';
+import 'package:moneytama/presentation/views/pet_widget.dart';
+import 'package:moneytama/presentation/screens/add_operation_screen.dart';
 
+import '../../tools/pet_painter.dart';
 import '../di/di.dart';
-import '../views/operations_list.dart';
-import '../views/pet_widget.dart';
-import 'add_operation_screen.dart';
 
 class MainScreen extends StatefulWidget {
   final Function(int) updateIndex;
@@ -33,10 +35,25 @@ class MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Size screenSize = MediaQuery.of(context).size;
-    final double screenWidth = screenSize.width;
+    final Size screenSize   = MediaQuery.of(context).size;
+    final double screenWidth  = screenSize.width;
     final double screenHeight = screenSize.height;
-    PetNotifier notifier = Provider.of<PetNotifier>(context);
+    final PetNotifier notifier = Provider.of<PetNotifier>(context);
+
+
+    final String filePath = switch(notifier.pet.mood) {
+      Mood.happy =>  'assets/svg/pet.svg',
+      Mood.normal => 'assets/svg/pet.svg',
+      Mood.sad => 'assets/svg/sad_pet.svg',
+    };
+
+    final Future<String> petSvgFuture = PetPainter().getColoredPet(
+      filePath,
+      notifier.pet.color.main,
+      notifier.pet.color.secondary,
+      notifier.pet.color.accent,
+    );
+
     return Column(
       children: [
         Row(
@@ -45,7 +62,7 @@ class MainScreenState extends State<MainScreen> {
             Expanded(
               child: Text(
                 notifier.pet.name,
-                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
               ),
             ),
             Text(
@@ -57,14 +74,32 @@ class MainScreenState extends State<MainScreen> {
             const SizedBox(width: 20),
           ],
         ),
-        PetWidget(width: screenWidth, height: screenHeight / 4.1),
+        FutureBuilder<String>(
+          future: petSvgFuture,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Center(
+                child: SizedBox(
+                  width: screenWidth,
+                  height: screenHeight / 4.1,
+                  child: SvgPicture.string(
+                    snapshot.data!,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Ошибка загрузки изображения'));
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
           child: Row(
             children: [
-              Expanded(
-                child: _GoToHistoryButton(updateIndex: widget.updateIndex),
-              ),
+              Expanded(child: _GoToHistoryButton(updateIndex: widget.updateIndex)),
               const SizedBox(width: 20),
               SizedBox(width: 50, height: 50, child: _AddOperationButton()),
             ],

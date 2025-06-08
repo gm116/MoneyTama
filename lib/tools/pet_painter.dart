@@ -1,9 +1,13 @@
 import 'package:flutter/services.dart';
 
 class PetPainter {
-  Future<String> getColoredPet(String mainColor, String secondaryColor, String accentColor) async {
-    String svgString = await rootBundle.loadString('assets/svg/pet.svg');
-
+  Future<String> getColoredPet(
+      String filePath,
+      String mainColor,
+      String secondaryColor,
+      String accentColor,
+      ) async {
+    String svgString = await rootBundle.loadString(filePath);
     return svgString
         .replaceAll('#COLOR_MAIN', mainColor)
         .replaceAll('#COLOR_SECONDARY', secondaryColor)

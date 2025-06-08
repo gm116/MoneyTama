@@ -197,7 +197,7 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                       TextFormField(
                         controller: _sumController,
                         keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(labelText: 'стоимость'),
+                        decoration: const InputDecoration(labelText: 'Стоимость'),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Пожалуйста, введите стоимость';

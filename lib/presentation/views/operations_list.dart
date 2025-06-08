@@ -29,29 +29,11 @@ class RecentOperationListState extends State<RecentOperationsList> {
   @override
   void initState() {
     super.initState();
-    // TODO get ops with widget.limit
-    operations = [
-      Income(
-        category: "Salary",
-        sum: 2000.00,
-        timestamp: DateTime.now().subtract(const Duration(days: 1)),
-        description: "Monthly salary",
-      ),
-      Expense(
-        planned: true,
-        category: "Food",
-        sum: 50.75,
-        timestamp: DateTime.now().subtract(const Duration(days: 2)),
-        description: "Grocery shopping",
-      ),
-      Expense(
-        planned: true,
-        category: "Food",
-        sum: 50.75,
-        timestamp: DateTime.now().subtract(const Duration(days: 2)),
-        description: "Grocery shopping",
-      ),
-    ];
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   @override
@@ -76,7 +58,7 @@ class RecentOperationListState extends State<RecentOperationsList> {
           } else if (state is HistoryInfo) {
             final List<Operation> operations = state.operations.sublist(
               0,
-              widget.limit + 1,
+              state.operations.length > 3 ? widget.limit + 1 : state.operations.length,
             );
             return SizedBox(
               height: widget.height,
