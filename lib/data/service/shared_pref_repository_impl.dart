@@ -12,6 +12,9 @@ class SharedPrefRepositoryImpl implements SharedPrefRepository {
   Future<Map<DateTime, bool>> getWeekAttendance() async {
     final sharedPrefs = await SharedPreferences.getInstance();
     final attendanceData = sharedPrefs.getString(_attendanceKey);
+    final DateTime today = DateTime(
+        DateTime.now().year, DateTime.now().month, DateTime.now().day
+    );
 
     if (attendanceData == null) {
       sharedPrefs.setString(
@@ -20,8 +23,24 @@ class SharedPrefRepositoryImpl implements SharedPrefRepository {
       return _initializeCurrentWeek();
     }
 
-    final Map<String, dynamic> decodedData = Map<String, dynamic>.from(
+    Map<String, dynamic> decodedData = Map<String, dynamic>.from(
         jsonDecode(attendanceData) as Map);
+
+    DateTime? startDate = DateTime.parse(
+        sharedPrefs.getString(_streakStartDateKey) ??
+            _normalizeDate(DateTime.now()).toIso8601String());
+
+    for (final key in decodedData.keys) {
+      if (DateTime.parse(key).isBefore(today)) break;
+      if (!(decodedData[key] as bool)) {
+        startDate = null;
+      } else {
+        startDate ??= DateTime.parse(key);
+        sharedPrefs.setString(
+            _streakStartDateKey,
+            startDate.toIso8601String());
+      }
+    }
 
     final currentWeekDates = _getCurrentWeekDates();
     logger.info('repo getWeekAttendance: $decodedData');

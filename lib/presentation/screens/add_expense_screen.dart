@@ -7,11 +7,8 @@ class AddExpenseScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Добавить расход')),
-      body: Center(
-        child: const Text('Стоимость, дата, комментарий, категория'),
-      ),
+    return Center(
+      child: const Text('Стоимость, дата, комментарий, категория'),
     );
   }
 }
