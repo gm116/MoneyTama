@@ -31,7 +31,6 @@ class Income extends Operation {
   }
 }
 
-
 class Expense extends Operation {
   final String category;
   final bool planned;
@@ -48,25 +47,4 @@ class Expense extends Operation {
   String toString() {
     return 'Expense(planned: $planned, category: $category, amount: $sum, timestamp: $timestamp, description: $description)';
   }
-}
-
-// todo: перенести это в бд как существующие категории
-enum IncomeCategory {
-  salary,
-  moneyTransfers,
-  estateIncomes,
-  payments,
-  depositPayments,
-  other,
-}
-
-enum ExpenseCategory {
-  food,
-  transport,
-  medicine,
-  education,
-  beauty,
-  entertainment,
-  moneyTransfers,
-  other,
 }
