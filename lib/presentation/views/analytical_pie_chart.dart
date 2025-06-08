@@ -44,7 +44,6 @@ class AnalyticalPieChartState extends State<AnalyticalPieChart>
       animation: _animation,
       builder: (context, child) {
         return CustomPaint(
-          size: const Size(300, 300),
           painter: PieChartPainter(widget.data, _animation.value),
         );
       },
@@ -125,6 +124,12 @@ class PieChartPainter extends CustomPainter {
 class PieChartSegment {
   final double percentage;
   final Color color;
+  final String category;
 
-  PieChartSegment({required this.percentage, required this.color});
+  PieChartSegment({required this.percentage, required this.color, required this.category});
+
+  @override
+  String toString() {
+    return 'PieChartSegment(percentage: $percentage, color: $color)';
+  }
 }

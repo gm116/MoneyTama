@@ -107,7 +107,8 @@ class SharedPrefRepositoryImpl implements SharedPrefRepository {
     final now = DateTime.now();
     final monday = now.subtract(Duration(days: now.weekday - 1));
     return List.generate(
-        7, (index) => _normalizeDate(monday.add(Duration(days: index))));
+        7, (index) => _normalizeDate(monday.add(Duration(days: index)))
+    );
   }
 
   DateTime _normalizeDate(DateTime date) {

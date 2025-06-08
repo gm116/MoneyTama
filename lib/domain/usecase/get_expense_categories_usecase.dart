@@ -1,13 +1,12 @@
+import '../repository/local_repository.dart';
+
 class GetExpenseCategoriesUseCase {
-  Future<List<String>> execute() async {
-    return[
-      'food',
-      'transport',
-      'medicine',
-      'education',
-      'beauty',
-      'entertainment',
-      'money transfers',
-    ];
-  }
+  final LocalRepository repository;
+
+  GetExpenseCategoriesUseCase(this.repository);
+
+  Future<List<String>> execute() =>
+      repository.getCategories(type: 'expense')
+          .then((categories) =>
+          categories.map((category) => category.name).toList());
 }

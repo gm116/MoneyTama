@@ -7,9 +7,10 @@ import 'package:moneytama/presentation/state/pet_notifier.dart';
 import 'package:moneytama/tools/logger.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  setupDependencies();
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   initLogger();
+  setupDependencies();
   runApp(
     MultiProvider(
       providers: [

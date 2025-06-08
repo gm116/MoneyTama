@@ -1,11 +1,11 @@
+import '../repository/local_repository.dart';
+
 class GetIncomeCategoriesUseCase {
-  Future<List<String>> execute() async {
-    return [
-      'salary',
-      'money transfers',
-      'estate incomes',
-      'payments',
-      'deposit payments',
-    ];
-  }
+  final LocalRepository repository;
+
+  GetIncomeCategoriesUseCase(this.repository);
+
+  Future<List<String>> execute() =>
+      repository.getCategories(type: 'income').then((categories) =>
+          categories.map((category) => category.name).toList());
 }

@@ -1,7 +1,12 @@
 import '../entity/operation.dart';
+import '../repository/local_repository.dart';
 
 class AddExpenseUseCase {
-  Future<void> execute(Expense expense) async {
-    // todo: save operation to database
+  final LocalRepository repository;
+
+  AddExpenseUseCase(this.repository);
+
+  Future<void> execute(Expense expense) {
+    return repository.addOperation(expense);
   }
 }
