@@ -4,7 +4,6 @@ import 'package:moneytama/presentation/screens/settings_screen.dart';
 
 import 'decoration_screen.dart';
 import 'history_screen.dart';
-import 'home_screen.dart';
 
 class MainScaffold extends StatefulWidget {
   const MainScaffold({super.key});
