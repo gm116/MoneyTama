@@ -134,6 +134,17 @@ class LocalRepositorySqfliteImpl implements LocalRepository {
   }
 
   @override
+  Future<List<Operation>> getLastOperations({int count = 0}) async {
+    final db = await database;
+    final maps = await db.query(
+      'operations',
+      orderBy: 'timestamp DESC',
+      limit: count == 0 ? null : count,
+    );
+    return maps.map((map) => Operation.fromMap(map)).toList();
+  }
+
+  @override
   Future<List<Operation>> getOperations() async {
     final db = await database;
     final maps = await db.query('operations', orderBy: 'timestamp DESC');

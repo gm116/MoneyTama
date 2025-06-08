@@ -7,6 +7,8 @@ abstract class LocalRepository {
   Future<void> addOperation(Operation operation);
   Future<List<Operation>> getOperations();
   Future<void> removeOperation(String id);
+  /// Вернуть последние [count] операций (если count == 0, вернуть все)
+  Future<List<Operation>> getLastOperations({int count = 0});
 
   // Бюджет
   Future<void> setBudget(Budget budget);
