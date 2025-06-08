@@ -1,3 +1,10 @@
+import 'package:moneytama/data/service/shared_pref_repository_impl.dart';
+import 'package:moneytama/domain/entity/operation.dart';
+import 'package:moneytama/presentation/di/di.dart';
+
+import '../usecase/get_budget_usecase.dart';
+import 'budget.dart';
+
 class Pet {
   Mood _mood;
   int _health;
@@ -7,7 +14,7 @@ class Pet {
   Pet()
     : _color = PetColors.green,
       _name = "Tama",
-      _health = 10,
+      _health = 100,
       _mood = Mood.happy;
 
   String get name => _name;
@@ -30,13 +37,24 @@ class Pet {
     _color = value;
   }
 
-  void cheerUp([int value = 5]) {
-    _increaseHealth(value);
+  Future<void> cheerUp(Income op) async {
+    SharedPrefRepositoryImpl rep = SharedPrefRepositoryImpl();
+    Budget? budget = await rep.getBudget();
+    if (budget != null) {
+      _increaseHealth(op.sum > budget.plannedAmount / 4 ? 20 : 10);
+    }
     _setMood();
   }
 
-  void disappoint([int value = 5]) {
-    _decreaseHealth(value);
+  Future<void> disappoint(Expense op) async {
+    SharedPrefRepositoryImpl rep = SharedPrefRepositoryImpl();
+    Budget? budget = await rep.getBudget();
+    if (budget != null) {
+      _decreaseHealth(
+        budget.plannedAmount - budget.currentBalance < 0 ? 10 : 0,
+      );
+      _decreaseHealth(!op.planned ? 10 : 0);
+    }
     _setMood();
   }
 

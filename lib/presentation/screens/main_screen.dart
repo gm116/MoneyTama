@@ -37,54 +37,64 @@ class MainScreenState extends State<MainScreen> {
     final double screenWidth = screenSize.width;
     final double screenHeight = screenSize.height;
     PetNotifier notifier = Provider.of<PetNotifier>(context);
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.local_fire_department, color: Colors.orange),
-            onPressed: () {
-              Navigator.of(context).pushNamed('/streak');
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Row(children: [_CustomizePetButton(), Text(
-            notifier.pet.name
-          )]),
-          PetWidget(width: screenWidth, height: screenHeight / 3),
-          RecentOperationsList(limit: 2, width: screenWidth, height: 310),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              children: [
-                Expanded(child: _GoToHistoryButton()),
-                const SizedBox(width: 20),
-                SizedBox(width: 50, height: 50, child: _AddOperationButton()),
-              ],
+    return Column(
+      children: [
+        Row(
+          children: [
+            _CustomizePetButton(updateIndex: widget.updateIndex),
+            Expanded(
+              child: Text(
+                notifier.pet.name,
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+              ),
             ),
+            Text(
+              "${notifier.pet.health} / 100",
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(width: 10),
+            const Icon(Icons.favorite, color: Colors.purple, size: 30),
+            const SizedBox(width: 20),
+          ],
+        ),
+        PetWidget(width: screenWidth, height: screenHeight / 4.1),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
+          child: Row(
+            children: [
+              Expanded(
+                child: _GoToHistoryButton(updateIndex: widget.updateIndex),
+              ),
+              const SizedBox(width: 20),
+              SizedBox(width: 50, height: 50, child: _AddOperationButton()),
+            ],
           ),
-        ],
-      ),
+        ),
+        RecentOperationsList(
+          limit: 2,
+          width: screenWidth,
+          height: screenHeight / 2.8,
+        ),
+      ],
     );
   }
 }
 
 class _CustomizePetButton extends StatelessWidget {
-  const _CustomizePetButton();
+  final Function(int) updateIndex;
+
+  const _CustomizePetButton({required this.updateIndex});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-
+        updateIndex(2);
       },
-      style: ElevatedButton.styleFrom(shape: const CircleBorder()),
+      style: ElevatedButton.styleFrom(
+        shape: const CircleBorder(),
+        minimumSize: const Size(40, 40),
+      ),
       child: SizedBox(
         height: 30,
         width: 30,
@@ -114,13 +124,15 @@ class _AddOperationButton extends StatelessWidget {
 }
 
 class _GoToHistoryButton extends StatelessWidget {
-  const _GoToHistoryButton();
+  final Function(int) updateIndex;
+
+  const _GoToHistoryButton({required this.updateIndex});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        getIt<NavigationService>().navigateTo(AddOperationScreen.routeName);
+        updateIndex(1);
       },
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
