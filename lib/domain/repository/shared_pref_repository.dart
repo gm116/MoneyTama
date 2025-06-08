@@ -7,4 +7,6 @@ abstract class SharedPrefRepository {
   Future<bool> checkTodayAttendance();
   Future<Budget?> getBudget();
   Future<void> setBudget(Budget budget);
+  Future<List<String>> getPetColors();
+  Future<void> setPetColors(List<String> colors);
 }

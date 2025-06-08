@@ -156,4 +156,19 @@ class SharedPrefRepositoryImpl implements SharedPrefRepository {
     await sharedPrefs.remove(_streakStartDateKey);
     logger.info('repo clear: SharedPreferences cleared');
   }
+
+  @override
+  Future<List<String>> getPetColors() async {
+    final prefs = await SharedPreferences.getInstance();
+    final colors = prefs.getStringList('pet_colors') ?? [];
+    logger.info('repo getPetColors: $colors');
+    return colors;
+  }
+
+  @override
+  Future<void> setPetColors(List<String> colors) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('pet_colors', colors);
+    logger.info('repo setPetColors: $colors');
+  }
 }
