@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:moneytama/presentation/screens/main_screen.dart';
 import 'package:moneytama/presentation/screens/settings_screen.dart';
 
 import 'decoration_screen.dart';
@@ -23,7 +24,7 @@ class _MainScaffoldState extends State<MainScaffold> {
   void initState() {
     super.initState();
     _pages = [
-      HomeScreen(updateIndex: _updateIndex),
+      MainScreen(updateIndex: _updateIndex),
       HistoryScreen(updateIndex: _updateIndex),
       DecorationScreen(updateIndex: _updateIndex),
       SettingsScreen(updateIndex: _updateIndex),

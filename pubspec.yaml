@@ -19,6 +19,7 @@ dependencies:
   flutter_svg: ^2.0.5
   shared_preferences: ^2.0.15
   flutter_bloc: ^9.1.1
+  intl:
 
 
 dev_dependencies:
@@ -26,11 +27,14 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^5.0.0
+
 flutter:
+
   uses-material-design: true
 
   assets:
-    - assets/
+    - assets/svg/
+    - assets/fonts/
 
   fonts:
     - family: Montserrat
