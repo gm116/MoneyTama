@@ -58,7 +58,8 @@ class _CustomizePetButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        Navigator.of(context).pushNamed(RouteNames.customizePet);
+        // todo: а где routenames??
+        // Navigator.of(context).pushNamed(RouteNames.customizePet);
       },
       child: Center(
         child: SvgPicture.asset(

@@ -4,8 +4,8 @@ import 'package:moneytama/presentation/screens/main_scaffold.dart';
 import 'package:moneytama/presentation/views/streak_info_view.dart';
 
 import '../../tools/logger.dart';
-import '../cubit/streak_info/streak_info_cubit.dart';
-import '../cubit/streak_info/streak_info_state.dart';
+import '../cubit/streak/streak_cubit.dart';
+import '../cubit/streak/streak_state.dart';
 import '../di/di.dart';
 import '../navigation/navigation_service.dart';
 
@@ -19,22 +19,22 @@ class StreakScreen extends StatelessWidget {
     logger.info('StreakScreen build');
     return BlocProvider(
       create: (_) {
-        final cubit = StreakInfoCubit(getIt());
+        final cubit = StreakCubit(getIt());
         logger.info('StreakInfoCubit created');
         return cubit;
       },
-      child: BlocListener<StreakInfoCubit, StreakInfoState>(
+      child: BlocListener<StreakCubit, StreakState>(
         listener: (context, state) {
-          if (state is StreakInfoSkip) {
+          if (state is StreakSkip) {
             logger.info(
                 'StreakInfoSkip state received, navigating to MainScaffold');
             getIt<NavigationService>().navigateTo(MainScaffold.routeName);
           }
         },
         child: Scaffold(
-          body: BlocBuilder<StreakInfoCubit, StreakInfoState>(
+          body: BlocBuilder<StreakCubit, StreakState>(
             builder: (context, state) {
-              if (state is StreakInfoLoaded) {
+              if (state is StreakLoaded) {
                 return Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -75,7 +75,7 @@ class StreakScreen extends StatelessWidget {
                     ],
                   ),
                 );
-              } else if (state is StreakInfoInitial) {
+              } else if (state is StreakInitial) {
                 return const Center(child: CircularProgressIndicator());
                 // todo: какая-нибудь красивая заставка
               } else {

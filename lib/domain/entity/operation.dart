@@ -15,9 +15,8 @@ class Operation {
   }
 }
 
-
 class Income extends Operation {
-  final IncomeCategory category;
+  final String category;
 
   Income({
     required this.category,
@@ -34,7 +33,7 @@ class Income extends Operation {
 
 
 class Expense extends Operation {
-  final ExpenseCategory category;
+  final String category;
   final bool planned;
 
   Expense({
@@ -51,7 +50,7 @@ class Expense extends Operation {
   }
 }
 
-
+// todo: перенести это в бд как существующие категории
 enum IncomeCategory {
   salary,
   moneyTransfers,
