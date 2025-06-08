@@ -41,16 +41,12 @@ class Pet {
   }
 
   void _setMood() {
-    if (health >= 80) {
+    if (health >= 66) {
       _mood = Mood.happy;
-    } else if (health >= 60) {
-      _mood = Mood.content;
-    } else if (health >= 40) {
+    } else if (health >= 33) {
       _mood = Mood.normal;
-    } else if (health > 5) {
-      _mood = Mood.sad;
     } else {
-      _mood = Mood.hibernated;
+      _mood = Mood.sad;
     }
   }
 
@@ -64,7 +60,7 @@ class Pet {
   }
 }
 
-enum Mood { happy, content, normal, sad, hibernated }
+enum Mood { happy, normal, sad }
 
 enum PetColors {
   green("#00FF00"),
