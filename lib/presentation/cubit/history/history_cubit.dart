@@ -2,32 +2,39 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moneytama/domain/usecase/get_last_operations_usecase.dart';
 
 import '../../../domain/entity/operation.dart';
+import '../../../domain/usecase/remove_operation_usecase.dart';
 import '../../../tools/logger.dart';
 import 'history_state.dart';
 
 class HistoryCubit extends Cubit<HistoryState> {
   final GetLastOperationsUseCase getLastOperationsUseCase;
+  final RemoveOperationUseCase removeOperationUseCase;
 
-  HistoryCubit({required this.getLastOperationsUseCase}) : super(HistoryLoading()) {
+  HistoryCubit({required this.getLastOperationsUseCase,
+    required this.removeOperationUseCase,
+  }) : super(HistoryLoading()) {
     loadHistory();
   }
 
   Future<void> loadHistory() async {
     emit(HistoryLoading());
     try {
-      // final operations = [
-      //   // todo usecase
-      //   Expense(planned: true, category: "aaa", sum: 100, timestamp: DateTime.now().subtract(Duration(days: 20)), description: "aaa"),
-      //   Expense(planned: false, category: "bbb", sum: 200, timestamp: DateTime.now().subtract(Duration(days: 300)), description: "bbb"),
-      //   Income(category: "ccc", sum: 300, timestamp: DateTime.now().subtract(Duration(days: 2)), description: "ccc"),
-      //   Expense(planned: true, category: "ccc", sum: 400, timestamp: DateTime.now().subtract(Duration(days: 3)), description: "ddd"),
-      //   Income(category: "ccc", sum: 500, timestamp: DateTime.now().subtract(Duration(days: 4)), description: "eee"),
-      //   Expense(planned: false, category: "ccc", sum: 600, timestamp: DateTime.now().subtract(Duration(days: 5)), description: "fff"),
-      // ];
       final operations = await getLastOperationsUseCase.execute();
       emit(HistoryInfo(operations: operations));
     } catch (error) {
       logger.severe('Error fetching history: $error');
+      emit(HistoryError());
+    }
+  }
+
+
+  Future<void> removeOperation(Operation operation) async {
+    try {
+      await removeOperationUseCase.execute(operation);
+      logger.info('Operation removed successfully');
+      loadHistory();
+    } catch (error) {
+      logger.severe('Error removing operation: $error');
       emit(HistoryError());
     }
   }

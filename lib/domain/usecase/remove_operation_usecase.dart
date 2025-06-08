@@ -1,3 +1,5 @@
+import 'package:moneytama/domain/entity/operation.dart';
+
 import '../repository/local_repository.dart';
 
 class RemoveOperationUseCase {
@@ -5,5 +7,5 @@ class RemoveOperationUseCase {
 
   RemoveOperationUseCase(this.repository);
 
-  Future<void> execute(String id) => repository.removeOperation(id);
+  Future<void> execute(Operation operation) => repository.removeOperation(operation);
 }

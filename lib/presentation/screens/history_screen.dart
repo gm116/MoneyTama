@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moneytama/presentation/cubit/history/history_cubit.dart';
 import 'package:moneytama/presentation/cubit/history/history_state.dart';
-import 'package:moneytama/presentation/views/analytical_pie_chart.dart';
+import 'package:moneytama/presentation/views/operations_list.dart';
 import 'package:moneytama/tools/logger.dart';
 
 import '../../../domain/entity/operation.dart';
@@ -33,6 +33,7 @@ class HistoryScreenState extends State<HistoryScreen> {
       create: (_) =>
           HistoryCubit(
             getLastOperationsUseCase: getIt(),
+            removeOperationUseCase: getIt(),
           ),
       child: BlocListener<HistoryCubit, HistoryState>(
         listener: (context, state) {
@@ -135,6 +136,10 @@ class HistoryScreenState extends State<HistoryScreen> {
                         });
                       },
                       total: totalIncome,
+                      backgroundColor: Theme
+                          .of(context)
+                          .colorScheme
+                          .primaryContainer,
                     ),
                   if (_showExpenseDetails)
                     PieChartBlock(
@@ -150,6 +155,10 @@ class HistoryScreenState extends State<HistoryScreen> {
                         });
                       },
                       total: totalExpense,
+                      backgroundColor: Theme
+                          .of(context)
+                          .colorScheme
+                          .tertiaryContainer,
                     ),
                   Expanded(
                     child: ListView.builder(
@@ -157,29 +166,12 @@ class HistoryScreenState extends State<HistoryScreen> {
                       itemCount: _filteredOperations.length,
                       itemBuilder: (context, index) {
                         final operation = _filteredOperations[index];
-                        return Card(
-                          margin: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: ListTile(
-                            title: Text(
-                              operation is Income
-                                  ? 'Доход: ${operation.category}'
-                                  : 'Трата: ${(operation as Expense).category}',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Text(
-                              'Описание: ${operation.description}\n'
-                                  'Сумма: ${operation.sum}\n'
-                                  'Дата: ${operation.timestamp
-                                  .toLocal()
-                                  .toString()
-                                  .split(' ')[0]}',
-                            ),
-                            trailing: operation is Expense && operation.planned
-                                ? const Icon(
-                                Icons.event_note, color: Colors.blue)
-                                : null,
-                          ),
+                        return OperationItem(
+                            operation: operation,
+                            showDeleteButton: true,
+                            onDelete: () {
+                              context.read<HistoryCubit>().removeOperation(operation);
+                            }
                         );
                       },
                     ),
@@ -229,8 +221,8 @@ class HistoryScreenState extends State<HistoryScreen> {
               operations.fold<double>(
                   0, (sum, op) => sum + op.sum)) *
               100,
-          color: Colors.primaries[categoryTotals.keys.toList().indexOf(
-              entry.key) % Colors.primaries.length],
+          color: chartColors[categoryTotals.keys.toList().indexOf(
+              entry.key) % chartColors.length],
           category: entry.key,
         ))
         .toList();
@@ -246,4 +238,17 @@ class HistoryScreenState extends State<HistoryScreen> {
     }
     return 'Другое';
   }
+
+  final List<Color> chartColors = [
+    Colors.red,
+    Colors.purple,
+    Colors.deepPurple,
+    Colors.indigo,
+    Colors.lightBlue,
+    Colors.teal,
+    Colors.lightGreen,
+    Colors.yellow,
+    Colors.orange,
+    Colors.brown,
+  ];
 }

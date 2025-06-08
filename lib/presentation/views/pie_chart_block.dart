@@ -10,6 +10,7 @@ class PieChartBlock extends StatelessWidget {
   final List<Operation> operations;
   final Function() onClose;
   final double total;
+  final Color backgroundColor;
 
   const PieChartBlock({
     super.key,
@@ -18,17 +19,23 @@ class PieChartBlock extends StatelessWidget {
     required this.operations,
     required this.onClose,
     required this.total,
+    required this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
+    // если в data больше 10 сегментов, то показываем первые 9, остальные объединяем в один сегмент "Другое"
     return Padding(
+      padding: const EdgeInsets.all(8.0),
+        child: Container(
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(16),
+      ),
       padding: const EdgeInsets.all(8.0),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
+          Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
@@ -42,7 +49,6 @@ class PieChartBlock extends StatelessWidget {
                 ),
               ],
             ),
-          ),
           Padding(
             padding: const EdgeInsets.all(12.0),
             child: SizedBox(
@@ -87,6 +93,7 @@ class PieChartBlock extends StatelessWidget {
           }),
         ],
       ),
+        ),
     );
   }
 
