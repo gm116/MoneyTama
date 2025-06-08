@@ -77,7 +77,6 @@ class StreakScreen extends StatelessWidget {
                 );
               } else if (state is StreakInitial) {
                 return const Center(child: CircularProgressIndicator());
-                // todo: какая-нибудь красивая заставка
               } else {
                 logger.info('streakInfoScreen: unexpected state: $state');
                 return const SizedBox.shrink();
