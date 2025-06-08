@@ -12,7 +12,7 @@ import '../views/chart_segment.dart';
 import '../views/history_top_block.dart';
 import '../views/pie_chart_block.dart';
 import 'add_operation_screen.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // <--- импорт локализации
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HistoryScreen extends StatefulWidget {
   static const String routeName = '/history';

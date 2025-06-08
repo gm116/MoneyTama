@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:moneytama/presentation/screens/add_operation_screen.dart';
-import 'package:moneytama/presentation/screens/budget_screen.dart';
 import 'package:moneytama/presentation/screens/main_scaffold.dart';
 import 'package:moneytama/presentation/screens/streak_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -30,9 +29,6 @@ class MyApp extends StatelessWidget {
           case AddOperationScreen.routeName:
             return MaterialPageRoute(
                 builder: (context) => const AddOperationScreen());
-          case '/budget':
-            return MaterialPageRoute(
-                builder: (context) => const BudgetScreen());
           default:
             return MaterialPageRoute(
                 builder: (context) => const StreakScreen());
@@ -48,7 +44,6 @@ class MyApp extends StatelessWidget {
             (BuildContext context) => const MainScaffold(),
         AddOperationScreen.routeName:
             (BuildContext context) => const AddOperationScreen(),
-        '/budget': (BuildContext context) => const BudgetScreen(),
       },
       // ---------------------------- Локализация ----------------------------
       localizationsDelegates: const [
