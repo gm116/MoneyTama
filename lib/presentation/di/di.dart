@@ -11,13 +11,11 @@ import '../../domain/usecase/add_income_category_usecase.dart';
 import '../../domain/usecase/get_last_operations_usecase.dart';
 import '../../domain/usecase/get_streak_info_usecase.dart';
 
-// Новые usecase'ы:
 import '../../domain/usecase/get_budget_usecase.dart';
 import '../../domain/usecase/set_budget_usecase.dart';
 import '../../domain/usecase/remove_category_usecase.dart';
 import '../../domain/usecase/remove_operation_usecase.dart';
 
-// Репозиторий для базы
 import '../../data/service/local_repository_sqflite_impl.dart';
 import '../../domain/repository/local_repository.dart';
 
@@ -43,8 +41,8 @@ void setupDependencies() {
   getIt.registerLazySingleton(() => GetLastOperationsUseCase(getIt<LocalRepository>()));
 
   // Новое — бюджет и удаление
-  getIt.registerLazySingleton(() => GetBudgetUseCase(getIt<LocalRepository>()));
-  getIt.registerLazySingleton(() => SetBudgetUseCase(getIt<LocalRepository>()));
+  getIt.registerLazySingleton(() => SetBudgetUseCase(getIt<SharedPrefRepository>()));
+  getIt.registerLazySingleton(() => GetBudgetUseCase(getIt<SharedPrefRepository>()));
   getIt.registerLazySingleton(() => RemoveCategoryUseCase(getIt<LocalRepository>()));
   getIt.registerLazySingleton(() => RemoveOperationUseCase(getIt<LocalRepository>()));
 }

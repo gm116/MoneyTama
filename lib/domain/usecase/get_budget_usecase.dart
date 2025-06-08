@@ -1,10 +1,12 @@
 import '../entity/budget.dart';
-import '../repository/local_repository.dart';
+import '../repository/shared_pref_repository.dart';
 
 class GetBudgetUseCase {
-  final LocalRepository repository;
+  final SharedPrefRepository repository;
 
   GetBudgetUseCase(this.repository);
 
-  Future<Budget?> execute() => repository.getBudget();
+  Future<Budget?> execute() async {
+    return await repository.getBudget();
+  }
 }
