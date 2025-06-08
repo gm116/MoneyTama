@@ -26,11 +26,10 @@ class OperationCubit extends Cubit<OperationState> {
     required this.addExpenseCategoryUseCase,
     required this.addIncomeCategoryUseCase,
   }) : super(OperationLoading()) {
-    startExpense();
+    startIncome();
   }
 
   Future<void> startExpense() async {
-    emit(OperationLoading());
     try {
       final categories = await getExpenseCategoriesUseCase.execute();
       emit(OperationExpense(categories: categories));
@@ -41,7 +40,6 @@ class OperationCubit extends Cubit<OperationState> {
   }
 
   Future<void> startIncome() async {
-    emit(OperationLoading());
     try {
       final categories = await getIncomeCategoriesUseCase.execute();
       emit(OperationIncome(categories: categories));
@@ -74,7 +72,7 @@ class OperationCubit extends Cubit<OperationState> {
   Future<void> addIncome(Income income) async {
     try {
       if (state is! OperationIncome) {
-        logger.warning('Cannot add income in non-OperationIncome state');
+        logger.warning('Cannot add income in non-OperationIncome state, current state: $state');
         return;
       }
       final category = income.category;
