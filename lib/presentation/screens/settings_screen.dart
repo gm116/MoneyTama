@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../state/locale_provider.dart';
 
 class SettingsScreen extends StatelessWidget {
   final Function(int) updateIndex;
@@ -7,6 +9,9 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localeProvider = context.watch<LocaleProvider>();
+    final locale = localeProvider.locale ?? Localizations.localeOf(context);
+
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -18,7 +23,24 @@ class SettingsScreen extends StatelessWidget {
             Navigator.pushNamed(context, '/budget');
           },
         ),
-        // сюда другие настройки
+        const SizedBox(height: 24),
+        const Text(
+          'Язык приложения:',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        DropdownButton<Locale>(
+          value: locale,
+          items: const [
+            DropdownMenuItem(value: Locale('ru'), child: Text('Русский')),
+            DropdownMenuItem(value: Locale('en'), child: Text('English')),
+          ],
+          onChanged: (Locale? newLocale) {
+            if (newLocale != null) {
+              localeProvider.setLocale(newLocale);
+            }
+          },
+        ),
+        // Здесь будут другие настройки
       ],
     );
   }
