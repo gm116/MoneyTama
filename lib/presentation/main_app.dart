@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:moneytama/presentation/screens/add_operation_screen.dart';
+import 'package:moneytama/presentation/screens/budget_screen.dart';
 import 'package:moneytama/presentation/screens/main_scaffold.dart';
 import 'package:moneytama/presentation/screens/streak_screen.dart';
 
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
             (BuildContext context) => const MainScaffold(),
         AddOperationScreen.routeName:
             (BuildContext context) => const AddOperationScreen(),
+        '/budget': (BuildContext context) => const BudgetScreen(),
       },
     );
   }

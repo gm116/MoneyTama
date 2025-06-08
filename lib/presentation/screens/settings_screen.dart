@@ -7,8 +7,19 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: const Text('Настройки лимитов и другие параметры'),
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        ListTile(
+          leading: const Icon(Icons.account_balance_wallet),
+          title: const Text('Настроить бюджет'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () {
+            Navigator.pushNamed(context, '/budget');
+          },
+        ),
+        // сюда другие настройки
+      ],
     );
   }
 }
