@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:moneytama/domain/entity/operation.dart';
@@ -64,8 +63,11 @@ class RecentOperationListState extends State<RecentOperationsList> {
 
 class OperationItem extends StatefulWidget {
   final Operation operation;
+  final bool showDeleteButton;
+  final Function? onDelete;
 
-  const OperationItem({super.key, required this.operation});
+  const OperationItem(
+      {super.key, required this.operation, this.showDeleteButton = false, this.onDelete});
 
   @override
   State<StatefulWidget> createState() => OperationItemState();
@@ -86,9 +88,9 @@ class OperationItemState extends State<OperationItem> {
     }
 
     final Color backgroundColor =
-        isIncome
-            ? Colors.green.shade100
-            : (isExpense ? Colors.red.shade100 : Colors.grey.shade200);
+    isIncome
+        ? Colors.green.shade100
+        : (isExpense ? Colors.red.shade100 : Colors.grey.shade200);
     final String formattedSum =
         "${isIncome ? '+ ' : '- '}${op.sum.toStringAsFixed(2)}";
 
@@ -101,36 +103,64 @@ class OperationItemState extends State<OperationItem> {
       color: backgroundColor,
       child: Padding(
         padding: const EdgeInsets.all(15),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  formattedSum,
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: isIncome ? Colors.green : Colors.red,
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        formattedSum,
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: isIncome ? Colors.green : Colors.red,
+                        ),
+                      ),
+                      Text(
+                        formattedDate,
+                        style: const TextStyle(
+                            fontSize: 14, color: Colors.black54),
+                      ),
+                    ],
                   ),
-                ),
-                Text(
-                  formattedDate,
-                  style: const TextStyle(fontSize: 14, color: Colors.black54),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            if (category.isNotEmpty)
-              Text(
-                category,
-                style: const TextStyle(fontSize: 14, color: Colors.black87),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (category.isNotEmpty)
+                            Text(
+                              category,
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.black87),
+                            ),
+                          const SizedBox(height: 4),
+                          Text(
+                            op.description.isEmpty ? "" : op.description,
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                        ],
+                      ),
+                      if (widget.showDeleteButton)
+                        IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            if (widget.onDelete != null) {
+                              widget.onDelete!();
+                            }
+                          },
+                        ),
+                    ],
+                  ),
+                ],
               ),
-            const SizedBox(height: 4),
-            Text(
-              op.description.isEmpty ? "" : op.description,
-              style: const TextStyle(fontSize: 16),
             ),
           ],
         ),

@@ -185,11 +185,18 @@ class LocalRepositorySqfliteImpl implements LocalRepository {
     return maps.map(_mapToOperation).toList();
   }
 
-  /// Удалить операцию по id
+  /// Удалить операцию по объекту
   @override
-  Future<void> removeOperation(String id) async {
+  Future<void> removeOperation(Operation operation) async {
     final db = await database;
-    await db.delete('operations', where: 'id = ?', whereArgs: [int.parse(id)]);
+    // Удаляем операцию по объекту, используя его уникальные поля
+    await db.delete('operations', where: 'timestamp = ? AND sum = ? AND description = ? AND type = ?',
+        whereArgs: [
+          operation.timestamp.toIso8601String(),
+          operation.sum,
+          operation.description,
+          operation is Income ? 'income' : 'expense',
+        ]);
   }
 
   /// Маппер: возвращает Income или Expense в зависимости от поля type

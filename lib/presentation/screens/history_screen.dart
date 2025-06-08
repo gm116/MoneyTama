@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moneytama/presentation/cubit/history/history_cubit.dart';
 import 'package:moneytama/presentation/cubit/history/history_state.dart';
-import 'package:moneytama/presentation/views/analytical_pie_chart.dart';
+import 'package:moneytama/presentation/views/operations_list.dart';
 import 'package:moneytama/tools/logger.dart';
 
 import '../../../domain/entity/operation.dart';
+import '../di/di.dart';
+import '../views/chart_segment.dart';
+import '../views/history_top_block.dart';
+import '../views/pie_chart_block.dart';
 
 class HistoryScreen extends StatefulWidget {
   static const String routeName = '/history';
@@ -26,7 +30,11 @@ class HistoryScreenState extends State<HistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => HistoryCubit(),
+      create: (_) =>
+          HistoryCubit(
+            getLastOperationsUseCase: getIt(),
+            removeOperationUseCase: getIt(),
+          ),
       child: BlocListener<HistoryCubit, HistoryState>(
         listener: (context, state) {
           if (state is HistoryError) {
@@ -75,77 +83,82 @@ class HistoryScreenState extends State<HistoryScreen> {
                       });
                     },
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _showIncomeDetails = !_showIncomeDetails;
-                              _showExpenseDetails = false;
-                            });
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            padding: const EdgeInsets.all(16.0),
-                            color: Colors.green[100],
-                            child: Column(
-                              children: [
-                                Text(
-                                  '₽$totalIncome',
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const Text('Доходы'),
-                                _buildSegmentedLine(incomeData),
-                              ],
-                            ),
+                  if (!_showIncomeDetails && !_showExpenseDetails)
+                    Row(
+                      children: [
+                        Expanded(
+                          child: HistoryTopBlock(
+                              color: Theme
+                                  .of(context)
+                                  .colorScheme
+                                  .primaryContainer,
+                              onTap: () {
+                                setState(() {
+                                  _showIncomeDetails = !_showIncomeDetails;
+                                  _showExpenseDetails = false;
+                                });
+                              },
+                              total: totalIncome,
+                              data: incomeData,
+                              title: 'Доходы'
                           ),
                         ),
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              _showExpenseDetails = !_showExpenseDetails;
-                              _showIncomeDetails = false;
-                            });
-                          },
-                          child: AnimatedContainer(
-                            duration: const Duration(milliseconds: 300),
-                            padding: const EdgeInsets.all(16.0),
-                            color: Colors.red[100],
-                            child: Column(
-                              children: [
-                                Text(
-                                  '₽$totalExpense',
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const Text('Траты'),
-                                _buildSegmentedLine(expenseData),
-                              ],
-                            ),
+                        Expanded(
+                          child: HistoryTopBlock(
+                              color: Theme
+                                  .of(context)
+                                  .colorScheme
+                                  .tertiaryContainer,
+                              onTap: () {
+                                setState(() {
+                                  _showExpenseDetails = !_showExpenseDetails;
+                                  _showIncomeDetails = false;
+                                });
+                              },
+                              total: totalExpense,
+                              data: expenseData,
+                              title: 'Траты'
                           ),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
                   if (_showIncomeDetails)
-                    _buildPieChartDetails(
-                      'Доходы',
-                      incomeData,
-                      _filteredOperations.whereType<Income>().toList(),
+                    PieChartBlock(
+                      title: 'Доходы',
+                      data: incomeData,
+                      operations: _filteredOperations
+                          .whereType<Income>()
+                          .toList(),
+                      onClose: () {
+                        setState(() {
+                          _showIncomeDetails = false;
+                          _showExpenseDetails = false;
+                        });
+                      },
+                      total: totalIncome,
+                      backgroundColor: Theme
+                          .of(context)
+                          .colorScheme
+                          .primaryContainer,
                     ),
                   if (_showExpenseDetails)
-                    _buildPieChartDetails(
-                      'Траты',
-                      expenseData,
-                      _filteredOperations.whereType<Expense>().toList(),
+                    PieChartBlock(
+                      title: 'Траты',
+                      data: expenseData,
+                      operations: _filteredOperations
+                          .whereType<Expense>()
+                          .toList(),
+                      onClose: () {
+                        setState(() {
+                          _showIncomeDetails = false;
+                          _showExpenseDetails = false;
+                        });
+                      },
+                      total: totalExpense,
+                      backgroundColor: Theme
+                          .of(context)
+                          .colorScheme
+                          .tertiaryContainer,
                     ),
                   Expanded(
                     child: ListView.builder(
@@ -153,29 +166,12 @@ class HistoryScreenState extends State<HistoryScreen> {
                       itemCount: _filteredOperations.length,
                       itemBuilder: (context, index) {
                         final operation = _filteredOperations[index];
-                        return Card(
-                          margin: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: ListTile(
-                            title: Text(
-                              operation is Income
-                                  ? 'Доход: ${operation.category}'
-                                  : 'Трата: ${(operation as Expense).category}',
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Text(
-                              'Описание: ${operation.description}\n'
-                                  'Сумма: ${operation.sum}\n'
-                                  'Дата: ${operation.timestamp
-                                  .toLocal()
-                                  .toString()
-                                  .split(' ')[0]}',
-                            ),
-                            trailing: operation is Expense && operation.planned
-                                ? const Icon(
-                                Icons.event_note, color: Colors.blue)
-                                : null,
-                          ),
+                        return OperationItem(
+                            operation: operation,
+                            showDeleteButton: true,
+                            onDelete: () {
+                              context.read<HistoryCubit>().removeOperation(operation);
+                            }
                         );
                       },
                     ),
@@ -191,62 +187,6 @@ class HistoryScreenState extends State<HistoryScreen> {
           },
         ),
       ),
-    );
-  }
-
-  Widget _buildSegmentedLine(List<PieChartSegment> data) {
-    return Row(
-      children: data.map((segment) {
-        return Expanded(
-          flex: (segment.percentage * 100).toInt(),
-          child: Container(
-            height: 8,
-            color: segment.color,
-          ),
-        );
-      }).toList(),
-    );
-  }
-
-  Widget _buildPieChartDetails(
-      String title, List<PieChartSegment> data, List<Operation> operations) {
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {
-                setState(() {
-                  _showIncomeDetails = false;
-                  _showExpenseDetails = false;
-                });
-              },
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 200,
-          width: 200,
-          child: AnalyticalPieChart(data: data),
-        ),
-        ...data.map((segment) {
-          final operation = operations.firstWhere(
-                (op) => _getCategory(op) == segment.category.toString()
-          );
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4.0),
-            child: Text(
-              '${_getCategory(operation)}: ${segment.percentage.toStringAsFixed(2)}% (${operation.sum} ₽)',
-            ),
-          );
-        }),
-      ],
     );
   }
 
@@ -267,7 +207,7 @@ class HistoryScreenState extends State<HistoryScreen> {
     }).toList();
   }
 
-  List<PieChartSegment> _getPieChartData(List<Operation> operations) {
+  List<ChartSegment> _getPieChartData(List<Operation> operations) {
     final Map<String, double> categoryTotals = {};
     for (var operation in operations) {
       categoryTotals[_getCategory(operation)] =
@@ -276,13 +216,13 @@ class HistoryScreenState extends State<HistoryScreen> {
     logger.info("categoryTotals: $categoryTotals");
     final res = categoryTotals.entries
         .map((entry) =>
-        PieChartSegment(
+        ChartSegment(
           percentage: (entry.value /
               operations.fold<double>(
                   0, (sum, op) => sum + op.sum)) *
               100,
-          color: Colors.primaries[categoryTotals.keys.toList().indexOf(
-              entry.key) % Colors.primaries.length],
+          color: chartColors[categoryTotals.keys.toList().indexOf(
+              entry.key) % chartColors.length],
           category: entry.key,
         ))
         .toList();
@@ -296,6 +236,19 @@ class HistoryScreenState extends State<HistoryScreen> {
     } else if (operation is Expense) {
       return operation.category;
     }
-    return '';
+    return 'Другое';
   }
+
+  final List<Color> chartColors = [
+    Colors.red,
+    Colors.purple,
+    Colors.deepPurple,
+    Colors.indigo,
+    Colors.lightBlue,
+    Colors.teal,
+    Colors.lightGreen,
+    Colors.yellow,
+    Colors.orange,
+    Colors.brown,
+  ];
 }

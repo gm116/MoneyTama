@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 
+import 'chart_segment.dart';
+
 class AnalyticalPieChart extends StatefulWidget {
-  final List<PieChartSegment> data;
+  final List<ChartSegment> data;
   final Duration animationDuration;
+  final String title;
 
   const AnalyticalPieChart({
     super.key,
     required this.data,
-    this.animationDuration = const Duration(seconds: 2),
+    this.animationDuration = const Duration(seconds: 3),
+    required this.title,
   });
 
   @override
@@ -44,7 +48,8 @@ class AnalyticalPieChartState extends State<AnalyticalPieChart>
       animation: _animation,
       builder: (context, child) {
         return CustomPaint(
-          painter: PieChartPainter(widget.data, _animation.value),
+          painter: PieChartPainter(widget.data, _animation.value,
+              title: widget.title),
         );
       },
     );
@@ -52,10 +57,11 @@ class AnalyticalPieChartState extends State<AnalyticalPieChart>
 }
 
 class PieChartPainter extends CustomPainter {
-  final List<PieChartSegment> data;
+  final List<ChartSegment> data;
   final double sweepAngle;
+  final String title;
 
-  PieChartPainter(this.data, this.sweepAngle);
+  PieChartPainter(this.data, this.sweepAngle, {required this.title});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -98,7 +104,7 @@ class PieChartPainter extends CustomPainter {
     // Draw text in the center
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
-        text: 'Total',
+        text: title,
         style: TextStyle(
           color: Colors.black,
           fontSize: 24,
@@ -118,18 +124,5 @@ class PieChartPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
-  }
-}
-
-class PieChartSegment {
-  final double percentage;
-  final Color color;
-  final String category;
-
-  PieChartSegment({required this.percentage, required this.color, required this.category});
-
-  @override
-  String toString() {
-    return 'PieChartSegment(percentage: $percentage, color: $color)';
   }
 }

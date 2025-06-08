@@ -5,7 +5,7 @@ abstract class LocalRepository {
   // Операции
   Future<void> addOperation(Operation operation);
   Future<List<Operation>> getOperations();
-  Future<void> removeOperation(String id);
+  Future<void> removeOperation(Operation operation);
   /// Вернуть последние [count] операций (если count == 0, вернуть все)
   Future<List<Operation>> getLastOperations({int count = 0});
 
