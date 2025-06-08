@@ -6,6 +6,7 @@ import 'package:moneytama/presentation/cubit/decoration/decoration_cubit.dart';
 import '../../tools/logger.dart';
 import '../cubit/decoration/decoration_state.dart';
 import '../di/di.dart';
+import '../views/swaying_svg.dart';
 
 class DecorationScreen extends StatelessWidget {
   final Function(int) updateIndex;
@@ -41,12 +42,12 @@ class DecorationScreen extends StatelessWidget {
                     child: SizedBox(
                       height: 300,
                       width: 300,
-                      child: SvgPicture.string(
-                        state.petString,
-                        height: 200,
+                      child: SwayingSvg(
+                        svgString: state.petString,
                         width: 200,
-                      ),
-                    )
+                        height: 200,
+                    ),
+                    ),
                 );
               } else if (state is DecorationLoading) {
                 return const Center(child: CircularProgressIndicator());
