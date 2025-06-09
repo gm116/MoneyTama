@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class BudgetForm extends StatelessWidget {
   final GlobalKey<FormState> formKey;
@@ -18,6 +19,8 @@ class BudgetForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Form(
       key: formKey,
       child: Column(
@@ -26,16 +29,16 @@ class BudgetForm extends StatelessWidget {
           TextFormField(
             controller: amountController,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(labelText: 'Сумма, ₽'),
+            decoration: InputDecoration(labelText: l10n.budget_amount),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Введите сумму';
+                return l10n.form_amount_required;
               }
               if (double.tryParse(value) == null) {
-                return 'Введите корректное число';
+                return l10n.form_amount_number;
               }
               if (double.parse(value) <= 0) {
-                return 'Сумма должна быть больше нуля';
+                return l10n.form_amount_positive;
               }
               return null;
             },
@@ -43,20 +46,23 @@ class BudgetForm extends StatelessWidget {
           const SizedBox(height: 12),
           DropdownButtonFormField<String>(
             value: periodType,
-            items: const [
-              DropdownMenuItem(value: 'DAILY', child: Text('День')),
-              DropdownMenuItem(value: 'WEEKLY', child: Text('Неделя')),
-              DropdownMenuItem(value: 'MONTHLY', child: Text('Месяц')),
+            items: [
+              DropdownMenuItem(
+                  value: 'DAILY', child: Text(l10n.budget_period_daily)),
+              DropdownMenuItem(
+                  value: 'WEEKLY', child: Text(l10n.budget_period_weekly)),
+              DropdownMenuItem(
+                  value: 'MONTHLY', child: Text(l10n.budget_period_monthly)),
             ],
             onChanged: onPeriodChanged,
-            decoration: const InputDecoration(labelText: 'Период'),
+            decoration: InputDecoration(labelText: l10n.budget_period),
           ),
           const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: onSave,
-              child: const Text('Сохранить'),
+              child: Text(l10n.budget_save),
             ),
           ),
         ],

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:moneytama/domain/entity/operation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 
 import '../cubit/history/history_cubit.dart';
 import '../cubit/history/history_state.dart';
@@ -65,7 +67,7 @@ class RecentOperationListState extends State<RecentOperationsList> {
               width: widget.width,
               child:
                   operations.isEmpty
-                      ? const Center(child: Text("Пока нет операций!"))
+                      ? Center(child: Text(AppLocalizations.of(context)!.history_no_operations))
                       : ListView.builder(
                         padding: EdgeInsets.zero,
                         itemCount: operations.length,

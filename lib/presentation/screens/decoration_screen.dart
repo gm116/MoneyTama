@@ -12,7 +12,13 @@ import 'package:moneytama/data/service/shared_pref_repository_impl.dart';
 import 'package:provider/provider.dart';
 import 'package:moneytama/presentation/state/pet_notifier.dart';
 
-class DecorationScreen extends StatefulWidget {
+import '../../tools/logger.dart';
+import '../cubit/decoration/decoration_state.dart';
+import '../di/di.dart';
+import '../views/swaying_svg.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+class DecorationScreen extends StatelessWidget {
   final Function(int) updateIndex;
 
   const DecorationScreen({super.key, required this.updateIndex});
@@ -46,6 +52,8 @@ class DecorationScreenState extends State<DecorationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = AppLocalizations.of(context);
+
     final PetNotifier notifier = Provider.of<PetNotifier>(context);
 
     return BlocProvider(
@@ -62,8 +70,8 @@ class DecorationScreenState extends State<DecorationScreen> {
           if (state is DecorationError) {
             logger.severe('DecorationError state received');
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Ошибка загрузки декорации. Попробуйте ещё раз.'),
+              SnackBar(
+                content: Text(loc!.decoration_error),
               ),
             );
           }

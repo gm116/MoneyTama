@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'chart_segment.dart';
 
 class HistoryTopBlock extends StatelessWidget {
@@ -20,8 +19,7 @@ class HistoryTopBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
+      return GestureDetector(
         onTap: onTap,
         child: Card(
           color: color,
@@ -31,7 +29,7 @@ class HistoryTopBlock extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  '₽$total',
+                  '₽${total.toStringAsFixed(0)}',
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -54,7 +52,6 @@ class HistoryTopBlock extends StatelessWidget {
                 ),
               ],
             ),
-          ),
         ),
       ),
     );

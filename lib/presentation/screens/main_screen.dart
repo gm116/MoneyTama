@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moneytama/domain/entity/pet.dart';
 import 'package:moneytama/presentation/state/pet_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:moneytama/presentation/navigation/navigation_service.dart';
 import 'package:moneytama/presentation/screens/decoration_screen.dart';
 import 'package:moneytama/presentation/views/operations_list.dart';
@@ -108,7 +110,7 @@ class MainScreenState extends State<MainScreen> {
         RecentOperationsList(
           limit: 2,
           width: screenWidth,
-          height: screenHeight / 2.8,
+          height: screenHeight / 3,
         ),
       ],
     );
@@ -165,6 +167,7 @@ class _GoToHistoryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return ElevatedButton(
       onPressed: () {
         updateIndex(1);
@@ -174,7 +177,7 @@ class _GoToHistoryButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
-      child: const Text("Перейти в историю"),
+      child: Text(l10n.history),
     );
   }
 }

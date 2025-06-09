@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:moneytama/presentation/screens/add_operation_screen.dart';
-import 'package:moneytama/presentation/screens/budget_screen.dart';
 import 'package:moneytama/presentation/screens/main_scaffold.dart';
 import 'package:moneytama/presentation/screens/streak_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:moneytama/presentation/state/locale_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../tools/logger.dart';
 import 'app_theme.dart';
@@ -14,6 +17,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = context.watch<LocaleProvider>().locale;
     logger.info('MyApp build');
     return MaterialApp(
       navigatorKey: getIt<NavigationService>().navigatorKey,
@@ -30,6 +34,7 @@ class MyApp extends StatelessWidget {
                 builder: (context) => const StreakScreen());
         }
       },
+      locale: locale,
       debugShowCheckedModeBanner: false,
       title: 'MoneyTama',
       theme: AppTheme.theme(false),
@@ -39,8 +44,19 @@ class MyApp extends StatelessWidget {
             (BuildContext context) => const MainScaffold(),
         AddOperationScreen.routeName:
             (BuildContext context) => const AddOperationScreen(),
-        '/budget': (BuildContext context) => const BudgetScreen(),
       },
+      // ---------------------------- Локализация ----------------------------
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('ru'),
+      ],
+      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
     );
   }
 }

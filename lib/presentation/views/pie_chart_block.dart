@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../domain/entity/operation.dart';
 import 'analytical_pie_chart.dart';
@@ -24,7 +25,6 @@ class PieChartBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // если в data больше 10 сегментов, то показываем первые 9, остальные объединяем в один сегмент "Другое"
     return Padding(
       padding: const EdgeInsets.all(8.0),
         child: Container(
@@ -59,7 +59,7 @@ class PieChartBlock extends StatelessWidget {
           ),
           ...data.map((segment) {
             final operation = operations.firstWhere(
-                  (op) => _getCategory(op) == segment.category.toString(),
+                  (op) => _getCategory(context, op) == segment.category.toString(),
             );
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -82,7 +82,7 @@ class PieChartBlock extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      '${_getCategory(operation)}: ${segment.percentage
+                      '${_getCategory(context, operation)}: ${segment.percentage
                           .toStringAsFixed(2)}% (${operation.sum} ₽)',
                       style: const TextStyle(fontSize: 14),
                     ),
@@ -97,12 +97,12 @@ class PieChartBlock extends StatelessWidget {
     );
   }
 
-  String _getCategory(Operation operation) {
+  String _getCategory(BuildContext context, Operation operation) {
     if (operation is Income) {
       return operation.category.toString();
     } else if (operation is Expense) {
       return operation.category.toString();
     }
-    return 'Другое';
+    return AppLocalizations.of(context)!.other;
   }
 }
