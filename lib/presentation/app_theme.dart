@@ -5,6 +5,7 @@ class AppTheme {
     final brightness = isDark ? Brightness.dark : Brightness.light;
     final theme = ThemeData(
       brightness: brightness,
+      fontFamily: 'Montserrat',
       colorScheme: ColorScheme.fromSeed(
         seedColor: Color(0xFF59008C),
         secondary: Color(0xFF94EBFF),
