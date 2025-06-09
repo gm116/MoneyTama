@@ -18,7 +18,7 @@ import '../di/di.dart';
 import '../views/swaying_svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class DecorationScreen extends StatelessWidget {
+class DecorationScreen extends StatefulWidget {
   final Function(int) updateIndex;
 
   const DecorationScreen({super.key, required this.updateIndex});
