@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:moneytama/presentation/screens/main_screen.dart';
 import 'package:moneytama/presentation/screens/settings_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:moneytama/tools/logger.dart';
 
 import 'decoration_screen.dart';
 import 'history_screen.dart';
@@ -41,7 +42,14 @@ class _MainScaffoldState extends State<MainScaffold> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
+    return PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {
+          setState(() {
+            _currentIndex = 0;
+          });
+          },
+    child: Scaffold(
       appBar: AppBar(
         title: Text(
           _currentIndex == 0
@@ -77,6 +85,7 @@ class _MainScaffoldState extends State<MainScaffold> {
           ),
         ],
       ),
+    ),
     );
   }
 }
