@@ -1,16 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:moneytama/domain/entity/pet.dart';
-import 'package:moneytama/presentation/state/pet_notifier.dart';
-import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:moneytama/presentation/navigation/navigation_service.dart';
-import 'package:moneytama/presentation/screens/decoration_screen.dart';
-import 'package:moneytama/presentation/views/operations_list.dart';
-import 'package:moneytama/presentation/views/pet_widget.dart';
 import 'package:moneytama/presentation/screens/add_operation_screen.dart';
+import 'package:moneytama/presentation/state/pet_notifier.dart';
+import 'package:moneytama/presentation/views/operations_list.dart';
+import 'package:moneytama/presentation/views/swaying_svg.dart';
+import 'package:provider/provider.dart';
 
 import '../../tools/pet_painter.dart';
 import '../di/di.dart';
@@ -84,10 +81,7 @@ class MainScreenState extends State<MainScreen> {
                 child: SizedBox(
                   width: screenWidth,
                   height: screenHeight / 4.1,
-                  child: SvgPicture.string(
-                    snapshot.data!,
-                    fit: BoxFit.contain,
-                  ),
+                  child: SwayingSvg(svgString: snapshot.data!, width: screenWidth, height: screenHeight / 4.1),
                 ),
               );
             } else if (snapshot.hasError) {
