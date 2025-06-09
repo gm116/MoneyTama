@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:moneytama/domain/entity/pet.dart';
 import 'package:moneytama/presentation/di/di.dart';
 import 'package:moneytama/presentation/main_app.dart';

@@ -110,7 +110,7 @@ class MainScreenState extends State<MainScreen> {
         RecentOperationsList(
           limit: 2,
           width: screenWidth,
-          height: screenHeight / 2.8,
+          height: screenHeight / 3,
         ),
       ],
     );
