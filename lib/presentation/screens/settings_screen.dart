@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../domain/usecase/get_operations_usecase.dart';
+import '../../domain/utils/export_csv.dart';
+import '../di/di.dart';
 import '../state/locale_provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../domain/entity/budget.dart';
@@ -227,9 +230,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
         const SizedBox(height: 12),
         const Divider(height: 32),
         ListTile(
-          leading: const Icon(Icons.info_outline),
-          title: Text(l10n.settings_about),
-          onTap: () {},
+          leading: const Icon(Icons.download_rounded),
+          title: Text(l10n.export_csv), // Локализовано!
+          onTap: () async {
+            final operationsList = await getIt<GetOperationsUseCase>().execute();
+            if (operationsList.isNotEmpty) {
+              await exportOperationsToCsv(operationsList, context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(l10n.export_csv_success))
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(l10n.export_csv_empty))
+              );
+            }
+          },
         ),
       ],
     );

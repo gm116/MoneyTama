@@ -50,8 +50,8 @@
   "decoration_title": "Pet Decoration",
   "decoration": "Decoration",
   "main_home": "Home",
-  "streak_title": "Streak",
-  "streak_info": "You've attended {days} days in a row!",
-  "streak_continue": "Keep going!",
-  "other": "Other"
+  "other": "Other",
+  "export_csv": "Export history to CSV",
+  "export_csv_success": "File exported!",
+  "export_csv_empty": "No operations to export"
 }

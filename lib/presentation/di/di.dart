@@ -12,6 +12,7 @@ import '../../domain/usecase/add_income_category_usecase.dart';
 import '../../domain/usecase/get_last_operations_usecase.dart';
 import '../../domain/usecase/get_pet_colors_usecase.dart';
 import '../../domain/usecase/get_streak_info_usecase.dart';
+import '../../domain/usecase/get_operations_usecase.dart';
 
 import '../../domain/usecase/get_budget_usecase.dart';
 import '../../domain/usecase/set_budget_usecase.dart';
@@ -41,6 +42,7 @@ void setupDependencies() {
   getIt.registerLazySingleton(() => GetExpenseCategoriesUseCase(getIt<LocalRepository>()));
   getIt.registerLazySingleton(() => GetIncomeCategoriesUseCase(getIt<LocalRepository>()));
   getIt.registerLazySingleton(() => GetLastOperationsUseCase(getIt<LocalRepository>()));
+  getIt.registerLazySingleton(() => GetOperationsUseCase(getIt<LocalRepository>()));
 
   // Бюджет и удаление
   getIt.registerLazySingleton(() => SetBudgetUseCase(getIt<SharedPrefRepository>()));
