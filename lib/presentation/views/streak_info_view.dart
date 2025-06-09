@@ -18,10 +18,8 @@ class StreakInfoView extends StatelessWidget {
           .now()
           .day,
     );
-    final weekDays = List
-        .generate(7, (index) => today.subtract(Duration(days: index)).toLocal())
-        .reversed
-        .toList();
+    final monday = today.subtract(Duration(days: today.weekday - 1));
+    final weekDays = List.generate(7, (index) => monday.add(Duration(days: index)));
 
     return Container(
         padding: const EdgeInsets.all(16.0),
