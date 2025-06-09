@@ -50,5 +50,8 @@
   "decoration_title": "Украшение питомца",
   "decoration": "Украшение",
   "main_home": "Главная",
-  "other": "Другое"
+  "other": "Другое",
+  "export_csv": "Экспортировать историю в CSV",
+  "export_csv_success": "Файл экспортирован!",
+  "export_csv_empty": "Нет операций для экспорта"
 }
