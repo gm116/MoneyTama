@@ -6,7 +6,7 @@ class AppTheme {
     final theme = ThemeData(
       brightness: brightness,
       colorScheme: ColorScheme.fromSeed(
-        seedColor: Color(0xFF59008C), // todo: выбрать цвета
+        seedColor: Color(0xFF59008C),
         secondary: Color(0xFF94EBFF),
         brightness: brightness,
       ),

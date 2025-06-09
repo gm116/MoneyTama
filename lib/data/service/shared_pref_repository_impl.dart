@@ -189,7 +189,7 @@ class SharedPrefRepositoryImpl implements SharedPrefRepository {
 
     final color = PetColors.values.firstWhere(
           (c) => c.toString() == petColorStr,
-      orElse: () => PetColors.green,
+      orElse: () => PetColors.pastel,
     );
 
     final pet = Pet();
