@@ -45,8 +45,8 @@ class MainScreenState extends State<MainScreen> {
 
     final String filePath = switch(notifier.pet.mood) {
       Mood.happy =>  'assets/svg/pet.svg',
-      Mood.normal => 'assets/svg/pet.svg',
-      Mood.sad => 'assets/svg/sad_pet.svg',
+      Mood.normal => 'assets/svg/pet-normal.svg',
+      Mood.sad => 'assets/svg/pet-sad.svg',
     };
 
     final Future<String> petSvgFuture = PetPainter().getColoredPet(
@@ -110,7 +110,7 @@ class MainScreenState extends State<MainScreen> {
         RecentOperationsList(
           limit: 2,
           width: screenWidth,
-          height: screenHeight / 3,
+          height: screenHeight / 3.1,
         ),
       ],
     );

@@ -12,13 +12,9 @@ import 'package:moneytama/data/service/shared_pref_repository_impl.dart';
 import 'package:provider/provider.dart';
 import 'package:moneytama/presentation/state/pet_notifier.dart';
 
-import '../../tools/logger.dart';
-import '../cubit/decoration/decoration_state.dart';
-import '../di/di.dart';
-import '../views/swaying_svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class DecorationScreen extends StatelessWidget {
+class DecorationScreen extends StatefulWidget {
   final Function(int) updateIndex;
 
   const DecorationScreen({super.key, required this.updateIndex});

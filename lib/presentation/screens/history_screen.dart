@@ -76,6 +76,8 @@ class HistoryScreenState extends State<HistoryScreen> {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        Padding(padding: EdgeInsets.only(top: 10, left: 30),
+                        child:
                         DropdownButton<String>(
                           value: _selectedPeriod,
                           items: [
@@ -96,7 +98,7 @@ class HistoryScreenState extends State<HistoryScreen> {
                                   _filterOperationsByPeriod(operations);
                             });
                           },
-                        ),
+                        ),),
                         ElevatedButton(
                           onPressed: () {
                             getIt<NavigationService>().navigateTo(

@@ -10,7 +10,7 @@ class Pet {
   PetColors _color;
 
   Pet()
-    : _color = PetColors.green,
+    : _color = PetColors.pastel,
       _name = "Tama",
       _health = 100,
       _mood = Mood.happy;
@@ -79,7 +79,7 @@ class Pet {
   }
 
   void setHealth(int petHealth) {
-    _health = health;
+    _health = petHealth;
     _setMood();
   }
 }
@@ -87,12 +87,12 @@ class Pet {
 enum Mood { happy, normal, sad }
 
 enum PetColors {
-  green("#60D5AC", "#00AB6F", "#006F48"),
-  blue("#6C8CD5", "#1240AB", "#06266F"),
-  red("#FE7276", "#FE3F44", "#A40004"),
-  orange("#FF9500", "#FFB040", "#FFC573"),
-  purple("#B365D4", "#4E026E", "#7908AA"),
-  pink("#E768AD", "#CE0071", "#860049");
+  pastel("#FFC7E0", "#A3DFFF", "#E6ADFF"),
+  mintcandy("#cce3de", "#fb6f92", "#94d2bd"),
+  red("#dde5b6", "#ff9f1c", "#8fb996"),
+  orange("#bee3db", "#758e4f", "#0f8b8d"),
+  purple("#ffe1a8", "#b83232", "#f35850"),
+  pink("#fdca40", "#8f2d56", "#f79824");
 
   final String main;
   final String secondary;

@@ -7,6 +7,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 import '../../../domain/entity/operation.dart';
+import '../../data/service/shared_pref_repository_impl.dart';
 import '../di/di.dart';
 import '../state/pet_notifier.dart';
 
@@ -42,7 +43,7 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
 
   void _addCustomCategory() {
     final TextEditingController customCategoryController =
-    TextEditingController();
+        TextEditingController();
     showDialog(
       context: context,
       builder: (context) {
@@ -50,7 +51,9 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
           title: Text(AppLocalizations.of(context)!.operation_add_category),
           content: TextFormField(
             controller: customCategoryController,
-            decoration: InputDecoration(hintText: AppLocalizations.of(context)!.operation_category),
+            decoration: InputDecoration(
+              hintText: AppLocalizations.of(context)!.operation_category,
+            ),
           ),
           actions: [
             TextButton(
@@ -89,7 +92,7 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
     }
   }
 
-  void _submitOperation(BuildContext context) {
+  Future<void> _submitOperation(BuildContext context) async {
     PetNotifier notifier = Provider.of<PetNotifier>(context, listen: false);
     final loc = AppLocalizations.of(context)!;
     if (_formKey.currentState!.validate()) {
@@ -109,6 +112,7 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
         );
         cubit.addIncome(income);
         notifier.pet.cheerUp(income);
+        await SharedPrefRepositoryImpl().setPet(notifier.pet);
       } else {
         final expense = Expense(
           planned: planned,
@@ -119,6 +123,7 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
         );
         cubit.addExpense(expense);
         notifier.pet.disappoint(expense);
+        await SharedPrefRepositoryImpl().setPet(notifier.pet);
       }
     }
   }
@@ -127,8 +132,8 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
   Widget build(BuildContext context) {
     final loc = AppLocalizations.of(context)!;
     return BlocProvider(
-      create: (_) =>
-          OperationCubit(
+      create:
+          (_) => OperationCubit(
             addExpenseUseCase: getIt(),
             addIncomeUseCase: getIt(),
             getIncomeCategoriesUseCase: getIt(),
@@ -137,22 +142,20 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
             addIncomeCategoryUseCase: getIt(),
           ),
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(loc.operation_add),
-        ),
+        appBar: AppBar(title: Text(loc.operation_add)),
         body: BlocListener<OperationCubit, OperationState>(
           listener: (context, state) {
             if (state is OperationSuccess) {
               logger.info('Operation added successfully');
               Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(loc.operation_success)),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(loc.operation_success)));
             } else if (state is OperationError) {
               logger.severe('Error adding operation');
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(loc.operation_error)),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(loc.operation_error)));
             } else if (state is OperationLoading) {
               logger.info('Loading operation categories...');
             } else if (state is OperationExpense) {
@@ -187,11 +190,15 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                         },
                         children: [
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                            ),
                             child: Text(loc.operation_income),
                           ),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                            ),
                             child: Text(loc.operation_expense),
                           ),
                         ],
@@ -200,7 +207,9 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                       TextFormField(
                         controller: _sumController,
                         keyboardType: TextInputType.number,
-                        decoration: InputDecoration(labelText: loc.budget_amount),
+                        decoration: InputDecoration(
+                          labelText: loc.budget_amount,
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return loc.form_amount_required;
@@ -215,7 +224,8 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                       TextFormField(
                         controller: _descriptionController,
                         decoration: InputDecoration(
-                            labelText: loc.form_desc_required),
+                          labelText: loc.form_desc_required,
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return loc.form_desc_required;
@@ -226,20 +236,23 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                       const SizedBox(height: 16),
                       DropdownButtonFormField<String>(
                         value: _selectedCategory,
-                        items: _categories
-                            .map((category) =>
-                            DropdownMenuItem(
-                              value: category,
-                              child: Text(category),
-                            ))
-                            .toList(),
+                        items:
+                            _categories
+                                .map(
+                                  (category) => DropdownMenuItem(
+                                    value: category,
+                                    child: Text(category),
+                                  ),
+                                )
+                                .toList(),
                         onChanged: (value) {
                           setState(() {
                             _selectedCategory = value;
                           });
                         },
                         decoration: InputDecoration(
-                            labelText: loc.operation_category),
+                          labelText: loc.operation_category,
+                        ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return loc.form_category_required;
@@ -255,35 +268,33 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(_selectedDate != null
-                              ? '${loc.form_select_date}: ${_selectedDate!
-                              .toLocal()
-                              .toString()
-                              .split(' ')[0]}'
-                              : loc.form_date_not_selected),
+                          Text(
+                            _selectedDate != null
+                                ? '${loc.form_select_date}: ${_selectedDate!.toLocal().toString().split(' ')[0]}'
+                                : loc.form_date_not_selected,
+                          ),
                           TextButton(
                             onPressed: _pickDate,
                             child: Text(loc.form_select_date),
                           ),
                         ],
                       ),
-                        SizedBox(
-                            height: 64,
+                      SizedBox(
+                        height: 64,
                         child: Row(
                           children: [
                             if (!_isIncome)
                               Checkbox(
-                              value: _isPlanned,
-                              onChanged: (value) {
-                                setState(() {
-                                  _isPlanned = value ?? false;
-                                });
-                              },
-                            ),
-                            if (!_isIncome)
-                              Text(loc.operation_planned_expense),
+                                value: _isPlanned,
+                                onChanged: (value) {
+                                  setState(() {
+                                    _isPlanned = value ?? false;
+                                  });
+                                },
+                              ),
+                            if (!_isIncome) Text(loc.operation_planned_expense),
                           ],
-                        )
+                        ),
                       ),
                       ElevatedButton(
                         onPressed: () => _submitOperation(context),
