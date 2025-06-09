@@ -39,7 +39,7 @@
   "history": "История",
   "history_no_operations": "Нет операций",
   "streak_title": "Серия",
-  "streak_info": "Вы посещаете {days} дней подряд!",
+  "streak_info": "Дней в приложении подряд: {days}!",
   "streak_continue": "Так держать!",
   "details": "Детали",
   "settings_language": "Язык",
