@@ -73,13 +73,14 @@ class HistoryScreenState extends State<HistoryScreen> {
 
               return Column(
                 children: [
-                  Row(
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.only(left: 20),
-                        child: Container(
-                          width: 200,
+                      Expanded(
+                        child:
+                      Container(
                           height: 50,
                           decoration: BoxDecoration(
                             color: Theme.of(context)
@@ -122,6 +123,12 @@ class HistoryScreenState extends State<HistoryScreen> {
                           ),
                         ),
                       ),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child:
+                            SizedBox(
+                            height: 50,
+                      child:
                       ElevatedButton(
                         onPressed: () {
                           getIt<NavigationService>().navigateTo(
@@ -133,11 +140,11 @@ class HistoryScreenState extends State<HistoryScreen> {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           padding: const EdgeInsets.symmetric(
-                            horizontal: 20,
+                            horizontal: 4,
                             vertical: 14,
                           ),
                           textStyle: const TextStyle(
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -154,7 +161,10 @@ class HistoryScreenState extends State<HistoryScreen> {
                           ),
                         ),
                       ),
+                      ),
+                      ),
                     ],
+                  ),
                   ),
                   if (!_showIncomeDetails && !_showExpenseDetails)
                     Row(
