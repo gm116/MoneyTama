@@ -1,16 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:moneytama/presentation/navigation/navigation_service.dart';
-import 'package:moneytama/presentation/screens/decoration_screen.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:moneytama/domain/entity/pet.dart';
 import 'package:moneytama/presentation/state/pet_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:moneytama/presentation/navigation/navigation_service.dart';
+import 'package:moneytama/presentation/screens/decoration_screen.dart';
+import 'package:moneytama/presentation/views/operations_list.dart';
+import 'package:moneytama/presentation/views/pet_widget.dart';
+import 'package:moneytama/presentation/screens/add_operation_screen.dart';
 
+import '../../tools/pet_painter.dart';
 import '../di/di.dart';
-import '../views/operations_list.dart';
-import '../views/pet_widget.dart';
-import 'add_operation_screen.dart';
 
 class MainScreen extends StatefulWidget {
   final Function(int) updateIndex;
@@ -34,57 +37,101 @@ class MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Size screenSize = MediaQuery.of(context).size;
-    final double screenWidth = screenSize.width;
+    final Size screenSize   = MediaQuery.of(context).size;
+    final double screenWidth  = screenSize.width;
     final double screenHeight = screenSize.height;
-    PetNotifier notifier = Provider.of<PetNotifier>(context);
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        elevation: 0.0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.local_fire_department, color: Colors.orange),
-            onPressed: () {
-              Navigator.of(context).pushNamed('/streak');
-            },
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Row(children: [
-            _CustomizePetButton(),
-            Text(notifier.pet.name)
-          ]),
-          PetWidget(width: screenWidth, height: screenHeight / 3),
-          RecentOperationsList(limit: 2, width: screenWidth, height: 310),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              children: [
-                Expanded(child: _GoToHistoryButton()),
-                const SizedBox(width: 20),
-                SizedBox(width: 50, height: 50, child: _AddOperationButton()),
-              ],
+    final PetNotifier notifier = Provider.of<PetNotifier>(context);
+
+
+    final String filePath = switch(notifier.pet.mood) {
+      Mood.happy =>  'assets/svg/pet.svg',
+      Mood.normal => 'assets/svg/pet.svg',
+      Mood.sad => 'assets/svg/sad_pet.svg',
+    };
+
+    final Future<String> petSvgFuture = PetPainter().getColoredPet(
+      filePath,
+      notifier.pet.color.main,
+      notifier.pet.color.secondary,
+      notifier.pet.color.accent,
+    );
+
+    return Column(
+      children: [
+        Row(
+          children: [
+            _CustomizePetButton(updateIndex: widget.updateIndex),
+            Expanded(
+              child: Text(
+                notifier.pet.name,
+                style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+              ),
             ),
+            Text(
+              "${notifier.pet.health} / 100",
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(width: 10),
+            const Icon(Icons.favorite, color: Colors.purple, size: 30),
+            const SizedBox(width: 20),
+          ],
+        ),
+        FutureBuilder<String>(
+          future: petSvgFuture,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Center(
+                child: SizedBox(
+                  width: screenWidth,
+                  height: screenHeight / 4.1,
+                  child: SvgPicture.string(
+                    snapshot.data!,
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              );
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Ошибка загрузки изображения'));
+            } else {
+              return const Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
+          child: Row(
+            children: [
+              Expanded(child: _GoToHistoryButton(updateIndex: widget.updateIndex)),
+              const SizedBox(width: 20),
+              SizedBox(width: 50, height: 50, child: _AddOperationButton()),
+            ],
           ),
-        ],
-      ),
+        ),
+        RecentOperationsList(
+          limit: 2,
+          width: screenWidth,
+          height: screenHeight / 2.8,
+        ),
+      ],
     );
   }
 }
 
 class _CustomizePetButton extends StatelessWidget {
-  const _CustomizePetButton();
+  final Function(int) updateIndex;
+
+  const _CustomizePetButton({required this.updateIndex});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {},
-      style: ElevatedButton.styleFrom(shape: const CircleBorder()),
+      onPressed: () {
+        updateIndex(2);
+      },
+      style: ElevatedButton.styleFrom(
+        shape: const CircleBorder(),
+        minimumSize: const Size(40, 40),
+      ),
       child: SizedBox(
         height: 30,
         width: 30,
@@ -114,14 +161,16 @@ class _AddOperationButton extends StatelessWidget {
 }
 
 class _GoToHistoryButton extends StatelessWidget {
-  const _GoToHistoryButton();
+  final Function(int) updateIndex;
+
+  const _GoToHistoryButton({required this.updateIndex});
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return ElevatedButton(
       onPressed: () {
-        getIt<NavigationService>().navigateTo(AddOperationScreen.routeName);
+        updateIndex(1);
       },
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),

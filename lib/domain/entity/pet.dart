@@ -1,3 +1,8 @@
+import 'package:moneytama/data/service/shared_pref_repository_impl.dart';
+import 'package:moneytama/domain/entity/operation.dart';
+
+import 'budget.dart';
+
 class Pet {
   Mood _mood;
   int _health;
@@ -7,7 +12,7 @@ class Pet {
   Pet()
     : _color = PetColors.green,
       _name = "Tama",
-      _health = 10,
+      _health = 100,
       _mood = Mood.happy;
 
   String get name => _name;
@@ -30,13 +35,25 @@ class Pet {
     _color = value;
   }
 
-  void cheerUp([int value = 5]) {
-    _increaseHealth(value);
+  Future<void> cheerUp(Income op) async {
+    SharedPrefRepositoryImpl rep = SharedPrefRepositoryImpl();
+    Budget? budget = await rep.getBudget();
+    if (budget != null && op.sum > budget.plannedAmount) {
+      _increaseHealth(10);
+    }
+    _increaseHealth(10);
     _setMood();
   }
 
-  void disappoint([int value = 5]) {
-    _decreaseHealth(value);
+  Future<void> disappoint(Expense op) async {
+    SharedPrefRepositoryImpl rep = SharedPrefRepositoryImpl();
+    Budget? budget = await rep.getBudget();
+    if (budget != null) {
+      _decreaseHealth(
+        budget.plannedAmount - budget.currentBalance < 0 ? 10 : 0,
+      );
+    }
+    _decreaseHealth(!op.planned ? 10 : 0);
     _setMood();
   }
 
@@ -52,25 +69,36 @@ class Pet {
 
   void _increaseHealth([int value = 5]) {
     _health += value;
+    if (_health > 100) _health = 100;
   }
 
   void _decreaseHealth([int value = 5]) {
     _health -= value;
     if (_health < 0) _health = 0;
+    if (_health > 100) _health = 100;
+  }
+
+  void setHealth(int petHealth) {
+    _health = health;
+    _setMood();
   }
 }
 
 enum Mood { happy, normal, sad }
 
 enum PetColors {
-  green("#00FF00"),
-  blue("#0000FF"),
-  red("#FF0000"),
-  orange("#FFA500"),
-  white("#FFFFFF"),
-  pink("#FFC0CB");
+  green("#60D5AC", "#00AB6F", "#006F48"),
+  blue("#6C8CD5", "#1240AB", "#06266F"),
+  red("#FE7276", "#FE3F44", "#A40004"),
+  orange("#FF9500", "#FFB040", "#FFC573"),
+  purple("#B365D4", "#4E026E", "#7908AA"),
+  pink("#E768AD", "#CE0071", "#860049");
 
-  final String hexCode;
+  final String main;
+  final String secondary;
+  final String accent;
 
-  const PetColors(this.hexCode);
+  const PetColors(this.main, this.secondary, this.accent);
+
+
 }

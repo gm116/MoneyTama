@@ -32,6 +32,7 @@ dev_dependencies:
     sdk: flutter
   flutter_gen_runner: any
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: any
 
 flutter:
   generate: true
@@ -49,3 +50,9 @@ flutter:
           weight: 700
         - asset: assets/fonts/Montserrat-Light.ttf
         - asset: assets/fonts/Montserrat-Regular.ttf
+
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/app-icon.png"

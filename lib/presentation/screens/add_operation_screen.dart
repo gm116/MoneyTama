@@ -4,9 +4,11 @@ import 'package:moneytama/presentation/cubit/operation/operation_cubit.dart';
 import 'package:moneytama/presentation/cubit/operation/operation_state.dart';
 import 'package:moneytama/tools/logger.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 import '../../../domain/entity/operation.dart';
 import '../di/di.dart';
+import '../state/pet_notifier.dart';
 
 class AddOperationScreen extends StatefulWidget {
   static const String routeName = '/add_operation';
@@ -88,6 +90,7 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
   }
 
   void _submitOperation(BuildContext context) {
+    PetNotifier notifier = Provider.of<PetNotifier>(context, listen: false);
     final loc = AppLocalizations.of(context)!;
     if (_formKey.currentState!.validate()) {
       final double sum = double.parse(_sumController.text);
@@ -105,6 +108,7 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
           description: description,
         );
         cubit.addIncome(income);
+        notifier.pet.cheerUp(income);
       } else {
         final expense = Expense(
           planned: planned,
@@ -114,6 +118,7 @@ class _AddOperationScreenState extends State<AddOperationScreen> {
           description: description,
         );
         cubit.addExpense(expense);
+        notifier.pet.disappoint(expense);
       }
     }
   }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:moneytama/domain/entity/pet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/repository/shared_pref_repository.dart';
@@ -14,6 +15,9 @@ class SharedPrefRepositoryImpl implements SharedPrefRepository {
   static const _plannedAmountKey = 'budget_planned_amount';
   static const _plannedPeriodKey = 'budget_planned_period';
   static const _currentBalanceKey = 'budget_current_balance';
+  static const _petNameKey = 'pet_name';
+  static const _petHealthKey = 'pet_health';
+  static const _petColorKey = 'pet_color';
 
   @override
   Future<void> setBudget(Budget budget) async {
@@ -170,5 +174,36 @@ class SharedPrefRepositoryImpl implements SharedPrefRepository {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList('pet_colors', colors);
     logger.info('repo setPetColors: $colors');
+  }
+
+  @override
+  Future<Pet?> getPet() async {
+    final prefs = await SharedPreferences.getInstance();
+    final petName = prefs.getString(_petNameKey);
+    final petHealth = prefs.getInt(_petHealthKey);
+    final petColorStr = prefs.getString(_petColorKey);
+
+    if (petName == null || petHealth == null || petColorStr == null) {
+      return Pet();
+    }
+
+    final color = PetColors.values.firstWhere(
+          (c) => c.toString() == petColorStr,
+      orElse: () => PetColors.green,
+    );
+
+    final pet = Pet();
+    pet.name = petName;
+    pet.setHealth(petHealth);
+    pet.color = color;
+    return pet;
+  }
+
+  @override
+  Future<void> setPet(Pet pet) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_petNameKey, pet.name);
+    await prefs.setInt(_petHealthKey, pet.health);
+    await prefs.setString(_petColorKey, pet.color.toString());
   }
 }
