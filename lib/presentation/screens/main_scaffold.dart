@@ -43,6 +43,7 @@ class _MainScaffoldState extends State<MainScaffold> {
 
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(
           _currentIndex == 0
               ? l10n.main_home

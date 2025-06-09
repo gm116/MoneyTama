@@ -231,7 +231,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         const Divider(height: 32),
         ListTile(
           leading: const Icon(Icons.download_rounded),
-          title: Text(l10n.export_csv), // Локализовано!
+          title: Text(l10n.export_csv),
           onTap: () async {
             final operationsList = await getIt<GetOperationsUseCase>().execute();
             if (operationsList.isNotEmpty) {
